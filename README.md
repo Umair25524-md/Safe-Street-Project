@@ -27,7 +27,7 @@ SafeStreet is a web-based platform designed to detect and report road damages, h
 ## Installation and Setup  
 1. Clone the repository:  
    ```bash
-   git clone https://github.com/your-username/safestreet-web.git
+   git clone https://github.com/Rayan-360/Safe-Street-Project.git
    cd safestreet-web
    ```
 
@@ -48,39 +48,19 @@ SafeStreet is a web-based platform designed to detect and report road damages, h
    ```
    MONGO_URI=your_mongodb_uri
    JWT_SECRET=your_jwt_secret
-   CLIENT_URL=http://localhost:3000
+   CLIENT_URL=http://localhost:5173
    ```
 
 4. Start the application:  
    - Frontend:  
      ```bash
-     npm start
+     npm run dev
      ```
    - Backend:  
      ```bash
-     npm run dev
+     nodemon server.js
      ```
 
-## Folder Structure  
-```
-safestreet-web/
-│
-├── frontend/                # React Frontend
-│   ├── public/               # Public Assets
-│   ├── src/                  # Source Files
-│   │   ├── components/       # Reusable Components
-│   │   ├── pages/            # Page Components
-│   │   ├── App.js            # Main App Component
-│   │   └── index.js          # Entry Point
-│   └── package.json          # Frontend Dependencies
-│
-└── backend/                 # Node.js Backend
-    ├── controllers/          # Route Controllers
-    ├── models/               # Mongoose Models
-    ├── routes/               # API Routes
-    ├── index.js              # Entry Point
-    └── package.json          # Backend Dependencies
-```
 
 ## Usage  
 1. Sign up and log in to access the dashboard.  
@@ -97,3 +77,5 @@ This project is licensed under the MIT License.
 
 ## Contributors  
 - [Rayan](https://github.com/Rayan-360)  
+- [Umair](https://github.com/Umair25524-md)
+- [Viraj](https://github.com/VirajPalnitkar)
