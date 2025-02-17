@@ -19,7 +19,7 @@ function App() {
         setIsAuthenticated(response.data.isAuthenticated);
       } catch (error) {
         setIsAuthenticated(false);
-      }
+      } 
     }
     checkAuth();
   }, []);

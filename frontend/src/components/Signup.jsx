@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 
 const Signup = () => {
 
@@ -68,10 +70,20 @@ const Signup = () => {
         }
     }
 
+    useGSAP(() => {
+        gsap.from('.sign-box',{
+            opacity:0,
+            y:100,
+            duration:1,
+            ease:'power3.out'
+        })
+    },[])
+
+
     return (
         <div className='flex justify-center items-center w-full h-[100vh] font-semibold relative'>
             <img src="./login-bg.jpg" alt="" className='absolute inset-0 object-cover w-full h-full'/>
-            <div className='flex flex-col justify-center items-center w-full max-w-md h-[500px] rounded-lg shadow-lg p-8 z-10 backdrop-blur-lg border-0.5 border-gray-400'>
+            <div className='flex flex-col justify-center items-center w-full max-w-md h-[500px] rounded-lg shadow-lg p-8 z-10 backdrop-blur-lg border-0.5 border-gray-400 sign-box'>
                 <img src="./logo1.png" alt="" className=''/>
                 <form onSubmit={handleSubmit}>
                     <input 
