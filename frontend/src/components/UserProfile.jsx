@@ -47,7 +47,7 @@ const UserProfile = ({ setIsAuthenticated }) => {
                 onClick={toggleDropdown}
             />
             {isOpen && (
-                <ul className="absolute right-0 mt-2 w-70 bg-white border rounded-lg shadow-lg text-black p-3">
+                <ul className="absolute right-0 mt-2 w-75 bg-white border rounded-lg shadow-lg text-black p-3">
                     <div className='p-3 flex items-center space-x-2 '>
                     <img
                         src="./profile.png"

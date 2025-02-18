@@ -28,7 +28,7 @@ SafeStreet is a web-based platform designed to detect and report road damages, h
 1. Clone the repository:  
    ```bash
    git clone https://github.com/Rayan-360/Safe-Street-Project.git
-   cd safestreet-web
+   cd Safe-Street-Project
    ```
 
 2. Install dependencies:  
@@ -79,3 +79,4 @@ This project is licensed under the MIT License.
 - [Rayan](https://github.com/Rayan-360)  
 - [Umair](https://github.com/Umair25524-md)
 - [Viraj](https://github.com/VirajPalnitkar)
+- [Aditya](https://github.com/Adityachary365)
