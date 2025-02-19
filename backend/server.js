@@ -15,6 +15,12 @@ app.use(express.json());
 app.use(cookieParser());
 
 
+mongoose.connect(process.env.MONGO_URI)
+.then(() => {
+    console.log("Connected to MongoDB");
+})
+.catch((err) => console.log(err));
+
 app.post('/signup', async (req, res) => {
     const { email, password } = req.body;
 
@@ -90,11 +96,7 @@ app.get('/isAuthenticated',(req,res) => {
 })
 
 
-mongoose.connect(process.env.MONGO_URI)
-.then(() => {
-    console.log("Connected to MongoDB");
-})
-.catch((err) => console.log(err));
+
 
 const port = process.env.PORT || 5000;
 

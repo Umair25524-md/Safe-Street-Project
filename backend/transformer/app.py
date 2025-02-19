@@ -52,7 +52,7 @@ def analyze_road_damage(image_path):
     }
 
 # Run analysis
-image_path = "C:\\Users\\viraj\\OneDrive\\Desktop\\Project-2-2\\Safe-Street-Project\\backend\\trial.jpg"
+image_path = "C:\\Users\\abd17\\Coding Languages\\PROGRAMMING\\WEB DEVELOPMENT\\REACT\\Safe_Street Project\\backend\\transformer\\temp.jpg"
 report = analyze_road_damage(image_path)
 print(report)
 
