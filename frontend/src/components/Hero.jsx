@@ -1,5 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useGSAP } from '@gsap/react';
+import AboutPage from './About';
+import Footer from './Footer';
+import ContactPage from './Contact';
 import gsap from 'gsap';
 
 const Hero = () => {
@@ -26,6 +29,7 @@ const Hero = () => {
     
 
   return (
+    <>
     <div ref={containerRef} className='relative w-full h-[100vh] font-[Montserrat] overflow-hidden'>
       {/* Background Image */}
       <img
@@ -48,7 +52,12 @@ const Hero = () => {
         </p>
       </div>
     </div>
+    <AboutPage/>
+    <ContactPage/>
+    <Footer/>
+    </>
   );
 };
+
 
 export default Hero;

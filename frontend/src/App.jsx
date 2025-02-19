@@ -6,6 +6,8 @@ import Hero from "./components/Hero";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import axios from "axios";
+import AboutPage from "./components/About";
+import ContactPage from "./components/Contact";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -31,6 +33,8 @@ function App() {
         <Route path="/" element={<Hero />} />
         <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/contact" element={<ContactPage />} />
       </Routes>
     </Router>
   );
