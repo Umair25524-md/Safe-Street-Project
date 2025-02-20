@@ -1,8 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useGSAP } from '@gsap/react';
-import AboutPage from './About';
-import Footer from './Footer';
-import ContactPage from './Contact';
 import gsap from 'gsap';
 
 const Hero = () => {
@@ -11,13 +8,12 @@ const Hero = () => {
 
   const containerRef = useRef(null)
 
-  useGSAP(
-    () => {
-      gsap.fromTo(".hero-head span", { opacity: 0, y: 20 }, { opacity: 1, y: 0, stagger: 0.1, ease: "power4.out" })
+  useGSAP(() => {
+      gsap.fromTo(".hero-head span", { opacity: 0, y: 20 }, { opacity: 1, y: 0, stagger: 0.1, ease: "power4.out" });
+      gsap.fromTo(".hero-sub", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1, ease: "power4.out", delay: 2 });
+    },{ scope: containerRef, dependencies: [] },
 
-      gsap.fromTo(".hero-sub", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1, ease: "power4.out", delay: 2 })
-    },
-    { scope: containerRef, dependencies: [] },
+
   )
 
 
@@ -35,7 +31,7 @@ const Hero = () => {
       <img
         src='./hero_bg.jpg'
         alt=""
-        className='object-cover w-full h-full'
+        className='object-cover w-full h-full image-container'
         id='hero-img'
       />
 
@@ -52,9 +48,6 @@ const Hero = () => {
         </p>
       </div>
     </div>
-    <AboutPage/>
-    <ContactPage/>
-    <Footer/>
     </>
   );
 };

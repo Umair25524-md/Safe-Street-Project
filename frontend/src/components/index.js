@@ -1,10 +1,10 @@
 const navElements = [
-    ['Home', '/'],
+    ['Home', '/','#home'],
     ['Report Damage','/report-damage'],
     ['Analysis Results','/analysis-results' ],
     ['Notifications','/notifications'],
-    ['About','/about' ],
-    ['Contact','/contact']
+    ['About','/about','#about' ],
+    ['Contact','/contact','#contact']
 ];
 
 export default navElements;
