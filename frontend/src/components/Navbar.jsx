@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import navElements from './index.js';
 import { Link ,useLocation} from 'react-router-dom';
 import UserProfile from './UserProfile.jsx';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 
 const Navbar = ({isAuthenticated,setIsAuthenticated}) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -34,6 +36,7 @@ const Navbar = ({isAuthenticated,setIsAuthenticated}) => {
     function handleClick() {
         setIsOpen(!isOpen);
     }
+
 
     return (
         <header className=' font-[Poppins] bg-black/40 backdrop-blur-lg w-full h-18 flex justify-between items-center px-4 text-white fixed top-0 left-0 z-20 '>
