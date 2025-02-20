@@ -80,3 +80,4 @@ This project is licensed under the MIT License.
 - [Umair](https://github.com/Umair25524-md)
 - [Viraj](https://github.com/VirajPalnitkar)
 - [Aditya](https://github.com/Adityachary365)
+- [Rohan](https://github.com/Roha-n6002)
