@@ -106,11 +106,11 @@ const AboutPage = () => {
   {/* Contributors Wrapper */}
     <div className="flex justify-center flex-wrap gap-6 px-6 max-w-7xl mx-auto contributors-box">
       {[
-        { name: 'Viraj', roll: '23BD1A057V', email: 'viraj@gmail.com' },
+        { name: 'Viraj', roll: '23BD1A057V', email: 'virajpalnitkar@gmail.com' },
         { name: 'Umair', roll: '23BD1A057B', email: 'md.umair25524@gmail.com' },
-        { name: 'Rayan', roll: '23BD1A056R', email: 'rayan@gmail.com' },
-        { name: 'Rohan Reddy', roll: '23BD1A0576', email: 'rohan@gmail.com' },
-        { name: 'Aditya', roll: '23BD1A057M', email: 'aditya@gmail.com' },
+        { name: 'Rayan', roll: '23BD1A056R', email: 'skrayan0017@gmail.com' },
+        { name: 'Rohan Reddy', roll: '23BD1A0576', email: 'talasanirohan006@gmail.com' },
+        { name: 'Aditya', roll: '23BD1A057M', email: 'charybros12345@gmail.com' },
       ].map((c, i) => (
         <div
           key={i}
