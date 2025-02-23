@@ -1,3 +1,134 @@
+// import React, { useState } from 'react';
+// import { Link, useNavigate } from 'react-router-dom';
+// import axios from 'axios';
+// import { ToastContainer, toast } from 'react-toastify';
+// import 'react-toastify/dist/ReactToastify.css';
+// import gsap from 'gsap';
+// import { useGSAP } from '@gsap/react';
+
+// const Login = ({setIsAuthenticated}) => {
+
+//     const [email, setEmail] = useState('');
+//     const [password, setPassword] = useState('');
+//     const [loading, setLoading] = useState(false);
+
+//     const navigate = useNavigate();
+
+
+
+//     // Notify Function for Success and Error Toasts
+//     const notify = (message, type) => {
+//         toast(message, {
+//             type: type,
+//             position: "top-center",
+//             autoClose: 2000,
+//             hideProgressBar: false,
+//             closeOnClick: true,
+//             pauseOnHover: true,
+//             draggable: true,
+//             progress: undefined,
+//         });
+//     };
+
+
+
+//     // Handle Input Changes
+//     function handleChange(event) {
+//         const { name, value } = event.target;
+//         if (name === 'email') {
+//             setEmail(value);
+//         }
+//         if (name === 'password') {
+//             setPassword(value);
+//         }
+//     }
+
+//     // Handle Form Submission
+//     async function handleSubmit(event) {
+//         event.preventDefault();
+//         setLoading(true); // Start Loading
+
+//         if(email === '' || password === ''){
+//             notify("All fields are required","error");
+//             setLoading(false);
+//             return;
+//         }
+
+//         try {
+//             const response = await axios.post('http://localhost:5000/login', { email, password },{
+//               withCredentials:true
+//             });
+//             if (response.status === 200) {
+//                 notify("Login Successful!", "success");
+//                 setIsAuthenticated(true);
+//                 localStorage.setItem('email', email);
+//                 setEmail('');
+//                 setPassword('');
+//                 setTimeout(() => {
+//                     navigate('/');
+//                 }, 1000);
+//             } else if (response.status === 400) {
+//                 notify("Invalid Credentials", "error");
+//             }
+//         } catch (error) {
+//             if (error.response) {
+//                 notify(error.response.data.message, "error");
+//             } else {
+//                 notify("Something went wrong. Please try again later.", "error");
+//             }
+//         } finally {
+//             setLoading(false); // Stop Loading
+//         }
+//     }
+
+
+//     useGSAP(() => {
+//         gsap.from('.login-box',{
+//             opacity:0,
+//             y:100,
+//             duration:1,
+//             ease:'power3.out'
+//         })
+//     },[])
+
+//     return (
+//         <div className='flex justify-center items-center w-full h-[100vh] font-semibold relative'>
+//             <img src="./login-bg.jpg" alt="" className='absolute inset-0 object-cover w-full h-full' />
+//             <ToastContainer />
+//             <div className='flex flex-col justify-center items-center w-full max-w-md h-[500px] rounded-lg shadow-lg p-8 z-10 backdrop-blur-lg border-0.5 border-gray-400 login-box'>
+//                 <img src="./logo1.png" alt="" className='' />
+//                 <form onSubmit={handleSubmit}>
+//                     <input
+//                         type="email"
+//                         placeholder='Email or Username'
+//                         value={email}
+//                         name='email'
+//                         onChange={handleChange}
+//                         className='px-5 py-3 text-left w-full border-2 border-black rounded-lg focus:outline-none focus:border-[#495F6A]' />
+//                     <input
+//                         type="password"
+//                         placeholder='Password'
+//                         name='password'
+//                         value={password}
+//                         onChange={handleChange}
+//                         className='px-5 py-3 text-left w-full border-2 border-black mt-4 rounded-lg focus:outline-none focus:border-[#495F6A]' />
+//                     <button
+//                         type="submit"
+//                         className={`w-full py-3 mt-4 text-lg rounded-lg text-white cursor-pointer 
+//                                     ${loading ? 'bg-gray-500 cursor-not-allowed' : 'bg-[#495F6A]'}`}
+//                         disabled={loading}
+//                     >
+//                         {loading ? 'Logging In...' : 'Login'}
+//                     </button>
+//                 </form>
+//                 <Link to="/signup" className='mt-4 mb-12'>Don't have an account? <span className='underline'>Sign Up</span></Link>
+//             </div>
+//         </div>
+//     )
+// }
+
+// export default Login;
+
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -6,17 +137,13 @@ import 'react-toastify/dist/ReactToastify.css';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
-const Login = ({setIsAuthenticated}) => {
-
+const Login = ({ setIsAuthenticated }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
-
     const navigate = useNavigate();
 
-
-
-    // Notify Function for Success and Error Toasts
+    // Toast notification function
     const notify = (message, type) => {
         toast(message, {
             type: type,
@@ -30,9 +157,7 @@ const Login = ({setIsAuthenticated}) => {
         });
     };
 
-
-
-    // Handle Input Changes
+    // Handle input changes
     function handleChange(event) {
         const { name, value } = event.target;
         if (name === 'email') {
@@ -43,29 +168,38 @@ const Login = ({setIsAuthenticated}) => {
         }
     }
 
-    // Handle Form Submission
+    // Handle form submission
     async function handleSubmit(event) {
         event.preventDefault();
-        setLoading(true); // Start Loading
+        setLoading(true);
 
-        if(email === '' || password === ''){
-            notify("All fields are required","error");
+        if (email === '' || password === '') {
+            notify("All fields are required", "error");
             setLoading(false);
             return;
         }
 
         try {
-            const response = await axios.post('http://localhost:5000/login', { email, password },{
-              withCredentials:true
+            const response = await axios.post('http://localhost:5000/login', { email, password }, {
+                withCredentials: true
             });
+
             if (response.status === 200) {
                 notify("Login Successful!", "success");
                 setIsAuthenticated(true);
                 localStorage.setItem('email', email);
                 setEmail('');
                 setPassword('');
+
+                // ✅ Redirect to Admin Panel if Admin logs in
+                const isAdmin = email === "admin@gmail.com" && password === "admin123"; // Change credentials as needed
+
                 setTimeout(() => {
-                    navigate('/');
+                    if (isAdmin) {
+                        navigate('/admin-panel');  // Redirect to Admin Panel
+                    } else {
+                        navigate('/');  // Redirect normal users to home
+                    }
                 }, 1000);
             } else if (response.status === 400) {
                 notify("Invalid Credentials", "error");
@@ -77,41 +211,42 @@ const Login = ({setIsAuthenticated}) => {
                 notify("Something went wrong. Please try again later.", "error");
             }
         } finally {
-            setLoading(false); // Stop Loading
+            setLoading(false);
         }
     }
 
-
     useGSAP(() => {
-        gsap.from('.login-box',{
-            opacity:0,
-            y:100,
-            duration:1,
-            ease:'power3.out'
-        })
-    },[])
+        gsap.from('.login-box', {
+            opacity: 0,
+            y: 100,
+            duration: 1,
+            ease: 'power3.out'
+        });
+    }, []);
 
     return (
         <div className='flex justify-center items-center w-full h-[100vh] font-semibold relative'>
-            <img src="./login-bg.jpg" alt="" className='absolute inset-0 object-cover w-full h-full' />
+            <img src="./login-bg.jpg" alt="Background" className='absolute inset-0 object-cover w-full h-full' />
             <ToastContainer />
             <div className='flex flex-col justify-center items-center w-full max-w-md h-[500px] rounded-lg shadow-lg p-8 z-10 backdrop-blur-lg border-0.5 border-gray-400 login-box'>
-                <img src="./logo1.png" alt="" className='' />
-                <form onSubmit={handleSubmit}>
+                <img src="./logo1.png" alt="Logo" className='' />
+                <form onSubmit={handleSubmit} className="w-full">
                     <input
                         type="email"
                         placeholder='Email or Username'
                         value={email}
                         name='email'
                         onChange={handleChange}
-                        className='px-5 py-3 text-left w-full border-2 border-black rounded-lg focus:outline-none focus:border-[#495F6A]' />
+                        className='px-5 py-3 text-left w-full border-2 border-black rounded-lg focus:outline-none focus:border-[#495F6A]'
+                    />
                     <input
                         type="password"
                         placeholder='Password'
                         name='password'
                         value={password}
                         onChange={handleChange}
-                        className='px-5 py-3 text-left w-full border-2 border-black mt-4 rounded-lg focus:outline-none focus:border-[#495F6A]' />
+                        className='px-5 py-3 text-left w-full border-2 border-black mt-4 rounded-lg focus:outline-none focus:border-[#495F6A]'
+                    />
                     <button
                         type="submit"
                         className={`w-full py-3 mt-4 text-lg rounded-lg text-white cursor-pointer 
@@ -124,7 +259,8 @@ const Login = ({setIsAuthenticated}) => {
                 <Link to="/signup" className='mt-4 mb-12'>Don't have an account? <span className='underline'>Sign Up</span></Link>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default Login;
+
