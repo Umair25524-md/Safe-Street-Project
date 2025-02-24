@@ -1,7 +1,7 @@
 const navElements = [
     ['Home', '/','#home'],
     ['Report Damage','/report'],
-    ['Analysis Results','/analysis' ],
+    ['Analysis','/analysis' ],
     ['Notifications','/notifications'],
     ['About','/about','#about' ],
     ['Contact','/contact','#contact']
