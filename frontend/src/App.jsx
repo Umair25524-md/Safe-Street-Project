@@ -9,6 +9,8 @@ import axios from "axios";
 import AboutPage from "./components/About";
 import ContactPage from "./components/Contact";
 import AdminPanel from './AdminPanel';
+import Notification from "./components/Notification";
+
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -37,6 +39,7 @@ function App() {
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/admin-panel" element={<AdminPanel />} />
+        <Route path="/notifications" element={<Notification/>}/>
       </Routes>
     </Router>
   );
