@@ -8,8 +8,7 @@ import Signup from "./components/Signup";
 import axios from "axios";
 import AboutPage from "./components/About";
 import ContactPage from "./components/Contact";
-import Analysis from "./components/Analysis";
-import Report from "./components/Report";
+import AdminPanel from './AdminPanel';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -37,8 +36,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
-        <Route path="/analysis" element={<Analysis />} />
-        <Route path="/report" element={<Report />} />
+        <Route path="/admin-panel" element={<AdminPanel />} />
       </Routes>
     </Router>
   );
