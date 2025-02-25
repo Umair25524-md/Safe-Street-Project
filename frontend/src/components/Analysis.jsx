@@ -1,11 +1,14 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaChartBar, FaUser, FaExclamationTriangle } from "react-icons/fa";
 import gsap from "gsap";
+import { useGSAP } from '@gsap/react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
+import {useNavigate} from "react-router-dom";
 
 const Analysis = () => {
   const statsRef = useRef([]);
   const tableRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     gsap.fromTo(
@@ -21,6 +24,14 @@ const Analysis = () => {
     );
   }, []);
 
+  useGSAP(() => {
+    gsap.fromTo(
+      ".advanced-btn",
+      { y: 10 },
+      { y: -10, repeat: -1, yoyo: true, duration: 1.5, ease: "power1.inOut" }
+    );
+  })
+
   const reports = [
     { id: 1, type: "Pothole", severity: "High", Date: "2021-09-01" },
     { id: 2, type: "Crack", severity: "Medium", Date: "2021-09-01" },
@@ -34,15 +45,19 @@ const Analysis = () => {
     { name: "Low", value: 18, color: "#22C55E" },
   ];
 
+ const navigateAdvanced = () => {
+    navigate('/advanced');
+  }
+ 
   return (
-    <div className="h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white flex flex-wrap p-8 font-semibold overflow-auto">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white flex flex-wrap p-8 font-semibold overflow-auto">
       {/* Left Side: Analysis Section */}
       <div className="w-full lg:w-2/3 flex flex-col items-center pr-0 lg:pr-4 mt-20">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl mt-10">
           {[
             { icon: <FaChartBar className="text-4xl text-blue-400 mb-2" />, title: "Total Reports", value: "50" },
             { icon: <FaUser className="text-4xl text-green-400 mb-2" />, title: "Total Users", value: "150" },
-            { icon: <FaExclamationTriangle className="text-4xl text-red-400 mb-2" />, title: "Pending Issues", value: "12" }
+            { icon: <FaExclamationTriangle className="text-4xl text-red-400 mb-2" />, title: "New Reports Today", value: "12" }
           ].map((item, index) => (
             <div
               key={index}
@@ -123,6 +138,12 @@ const Analysis = () => {
           </div>
         </div>
       </div>
+          <div>
+              <button className="text-xl advanced-btn fixed bottom-6 right-6 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-lg cursor-pointer transform transition-all duration-300 ease-in-out hover:scale-110"
+                      onClick={navigateAdvanced}>
+                Advanced details
+              </button>
+          </div>
     </div>
   );
 };

@@ -10,7 +10,8 @@ import AboutPage from "./components/About";
 import ContactPage from "./components/Contact";
 import Analysis from "./components/Analysis";
 import Notifications from "./components/Notification";
-import Report from "./components/Report"
+import Report from "./components/Report";
+import Advanced from "./components/Advanced";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -41,6 +42,7 @@ function App() {
         <Route path="/analysis" element={<Analysis />} />
         <Route path="/notifications" element={<Notifications />} />
         <Route path="/report" element={<Report />} />
+        <Route path="/advanced" element={<Advanced />} />
 
       </Routes>
     </Router>
