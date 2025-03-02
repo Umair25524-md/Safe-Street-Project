@@ -43,11 +43,11 @@ const Report = () => {
     };
 
     return (
-        <div className='min-h-screen w-full flex justify-center items-center'>
+        <div className='min-h-screen w-full flex justify-center items-center bg-gray-600'>
             <form className='flex flex-col gap-2' onSubmit={handleSubmit}>
                 <input
                     type="file"
-                    className='border-2 border-amber-200'
+                    className='border-2 border-amber-200 px-4 py-2 rounded-lg'
                     id='image'
                     name='image'
                     onChange={handleChange}
@@ -55,6 +55,7 @@ const Report = () => {
                 <input
                     type="text"
                     placeholder='Enter your id'
+                    className='border-2 border-amber-200 px-4 py-2 rounded-lg'
                     id='reporter_id'
                     name='reporter_id'
                     value={formData.reporter_id}
@@ -63,6 +64,7 @@ const Report = () => {
                 <input
                     type="text"
                     placeholder='Enter location'
+                    className='border-2 border-amber-200 px-4 py-2 rounded-lg'
                     id='location'
                     name='location'
                     value={formData.location}
@@ -71,11 +73,12 @@ const Report = () => {
                 <input
                     type="date"
                     id='date'
+                    className='border-2 border-amber-200 px-4 py-2 rounded-lg'
                     name='date'
                     value={formData.date}
                     onChange={handleChange}
                 />
-                <button type='submit'>submit</button>
+                <button className='bg-green-600 rounded-lg px-4 py-2 font-semibold text-white cursor-pointer' type='submit'>submit</button>
             </form>
         </div>
     );

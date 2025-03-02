@@ -84,8 +84,24 @@ const Advanced = () => {
             key={report.id}
             ref={(el) => (reportsRef.current[index] = el)}
             className="cards bg-black/80 backdrop-blur-lg text-white p-6 rounded-lg shadow-lg border border-gray-700 w-80 h-auto"
-            onMouseEnter={() => gsap.to(reportsRef.current[index],{scale:1.05,duration:0.3,ease:'power2.inOut'})}
-            onMouseLeave={() => gsap.to(reportsRef.current[index],{scale:1,duration:0.3,ease:'power2.inOut'})}
+            onMouseMove={(e) => {
+              const {left,top,width,height} = reportsRef.current[index].getBoundingClientRect();
+              const x = (e.clientX - left - width/2)/20;
+              const y = (e.clientY - top - height/2)/20;
+              gsap.to(reportsRef.current[index],{
+                rotateY:x,
+                rotateX:-y,
+                transformPerspective:1000,
+                ease:'power1.out',
+              })
+            }}
+            onMouseLeave={() => {
+              gsap.to(reportsRef.current[index],{
+                rotateY:0,
+                rotateX:0,
+                ease:'power1.out',
+              })
+            }}
             
           >
             <h2 className="text-xl font-semibold text-yellow-300 mb-4">Report #{report.id}</h2>
