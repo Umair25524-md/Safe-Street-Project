@@ -72,7 +72,7 @@ const AboutPage = () => {
         <div className="absolute inset-0 bg-black/50"></div>
 
         {/* About Content */}
-        <div className="about-box relative z-10 max-w-3xl p-6 sm:p-10 bg-black/40 backdrop-blur-md rounded-lg shadow-lg mx-auto">
+        <div className="about-box relative z-10 max-w-3xl p-6 sm:p-10 bg-black/40 backdrop-blur-md rounded-lg shadow-lg mx-auto mt-10 h-auto">
           <h1 className="text-3xl sm:text-5xl font-bold text-blue-300">About SafeStreet</h1>
           <p className="text-lg text-gray-200 mt-4 leading-relaxed">
             SafeStreet is a revolutionary platform designed to enhance road safety by detecting and analyzing damage in real-time.
