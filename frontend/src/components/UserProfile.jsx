@@ -34,10 +34,13 @@ const UserProfile = ({ setIsAuthenticated }) => {
     };
 
     const [userEmail, setUserEmail] = useState('');
+    const[userName,setUserName] = useState('');
 
     useEffect(() => {
         const email = localStorage.getItem('email');
+        const name = localStorage.getItem('username');
         if (email) setUserEmail(email);
+        if(name) setUserName(name);
     }, []);
 
     useGSAP(() => {
@@ -67,7 +70,8 @@ const UserProfile = ({ setIsAuthenticated }) => {
                         onClick={toggleDropdown}
                     />
                     <div className='mr-4 text-ellipsis'>
-                        <h1>Email:</h1>
+                    <h2 className='text-ellipsis'>{userName}</h2>
+                        {/* <h1>Email:</h1> */}
                         <h2 className='text-ellipsis'>{userEmail}</h2>
                     </div>
 

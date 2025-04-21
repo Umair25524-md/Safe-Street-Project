@@ -8,6 +8,7 @@ import { useGSAP } from '@gsap/react';
 
 const Signup = () => {
 
+    const[name,setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -31,6 +32,9 @@ const Signup = () => {
     // Handle Input Changes
     function handleChange(event) {
         const { name, value } = event.target;
+        if(name==='name'){
+            setName(value);
+        }
         if (name === 'email') {
             setEmail(value);
         }
@@ -44,17 +48,18 @@ const Signup = () => {
         event.preventDefault();
         setLoading(true); // Start Loading
 
-        if(email === '' || password === ''){
+        if(email === '' || password === ''||name===''){
             notify("All fields are required","error");
             setLoading(false);
             return;
         }
         try {
-            const response = await axios.post('http://localhost:5000/signup', { email, password });
+            const response = await axios.post('http://localhost:5000/signup', { name,email, password });
             if (response.status === 201) {
                 notify("Successfully registered!", "success");
                 setEmail('');
                 setPassword('');
+                setName('');
                 setTimeout(() => {
                     navigate('/login');
                 }, 2000);
@@ -86,9 +91,16 @@ const Signup = () => {
             <div className='flex flex-col justify-center items-center w-full max-w-md h-[500px] rounded-lg shadow-lg p-8 z-10 backdrop-blur-lg border-0.5 border-gray-400 sign-box'>
                 <img src="./logo1.png" alt="" className=''/>
                 <form onSubmit={handleSubmit}>
+                <input 
+                        type="text" 
+                        placeholder='Username' 
+                        name='name'
+                        value={name}
+                        onChange={handleChange}
+                        className='px-5 py-3 text-left w-full border-2 border-black rounded-lg focus:outline-none focus:border-[#495F6A] mb-4'/>
                     <input 
                         type="email" 
-                        placeholder='Email or Username' 
+                        placeholder='Email' 
                         name='email'
                         value={email}
                         onChange={handleChange}

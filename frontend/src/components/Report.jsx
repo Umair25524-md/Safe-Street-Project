@@ -1,87 +1,168 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Report = () => {
-    const today = new Date().toISOString().split('T')[0];
-    const [formData, setFormData] = useState({
-        image: null,
-        reporter_id: '',
-        location: '',
-        date: today,
+  const [image, setImage] = useState(null);
+  const [lat, setLat] = useState('');
+  const [lng, setLng] = useState('');
+  const [address, setAddress] = useState('');
+  const [landmark, setLandmark] = useState('');
+  const [roadType, setRoadType] = useState('');
+  const [comments, setComments] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const notify = (message, type) => {
+    toast(message, {
+      type,
+      position: "top-center",
+      autoClose: 2500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      theme: 'dark',
     });
+  };
 
-    const handleChange = (e) => {
-        const { name, value, files } = e.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: files ? files[0] : value,
-        }));
-    };
+  const report = async (e) => {
+    e.preventDefault();
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        // Handle form submission logic here
+    if (!image || !lat || !lng) {
+      notify("Image and coordinates are required.", "error");
+      return;
+    }
 
-        const formDataToSend = new FormData();
-        formDataToSend.append('image', formData.image);
-        formDataToSend.append('reporter_id', formData.reporter_id);
-        formDataToSend.append('location', formData.location);
-        formDataToSend.append('date', formData.date);
+    setLoading(true);
 
-        try {
-            const response = await axios.post('http://127.0.0.1:5000/analyze', formDataToSend, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-            console.log('Success');
-            console.log('Response:', response.data);
-        } catch (error) {
-            console.error('Error submitting form:', error);
-        }
-    };
+    const formData = new FormData();
+    formData.append('image', image);
+    formData.append('latitude', lat);
+    formData.append('longitude', lng);
+    formData.append('address', address);
+    formData.append('landmark', landmark);
+    formData.append('roadType', roadType);
+    formData.append('comments', comments);
 
-    return (
-        <div className='min-h-screen w-full flex justify-center items-center bg-gray-600'>
-            <form className='flex flex-col gap-2' onSubmit={handleSubmit}>
-                <input
-                    type="file"
-                    className='border-2 border-amber-200 px-4 py-2 rounded-lg'
-                    id='image'
-                    name='image'
-                    onChange={handleChange}
-                />
-                <input
-                    type="text"
-                    placeholder='Enter your id'
-                    className='border-2 border-amber-200 px-4 py-2 rounded-lg'
-                    id='reporter_id'
-                    name='reporter_id'
-                    value={formData.reporter_id}
-                    onChange={handleChange}
-                />
-                <input
-                    type="text"
-                    placeholder='Enter location'
-                    className='border-2 border-amber-200 px-4 py-2 rounded-lg'
-                    id='location'
-                    name='location'
-                    value={formData.location}
-                    onChange={handleChange}
-                />
-                <input
-                    type="date"
-                    id='date'
-                    className='border-2 border-amber-200 px-4 py-2 rounded-lg'
-                    name='date'
-                    value={formData.date}
-                    onChange={handleChange}
-                />
-                <button className='bg-green-600 rounded-lg px-4 py-2 font-semibold text-white cursor-pointer' type='submit'>submit</button>
-            </form>
+    try {
+      const res = await fetch('http://localhost:5000/report-damage', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const result = await res.json();
+      notify("Damage reported successfully!", "success");
+
+      // Reset fields after successful report
+      setImage(null);
+      setLat('');
+      setLng('');
+      setAddress('');
+      setLandmark('');
+      setRoadType('');
+      setComments('');
+    } catch (err) {
+      notify("Something went wrong. Try again later.", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-[#111827] text-white p-4">
+      <ToastContainer />
+      <form
+        onSubmit={report}
+        className="w-full max-w-lg bg-[#1F2937] p-6 rounded-xl shadow-xl mt-12"
+      >
+        <h2 className="text-2xl font-bold mb-6 text-center text-white">🚧 Report Road Damage</h2>
+
+        {/* Image Upload */}
+        <label className="block mb-2">Upload Image 📷 *</label>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => setImage(e.target.files[0])}
+          required
+          className="w-full p-2 mb-4 rounded bg-gray-800 text-white border-2 border-white"
+        />
+
+        {/* Coordinates */}
+        <div className="flex gap-4">
+          <div className="w-1/2">
+            <label>Latitude *</label>
+            <input
+              type="text"
+              value={lat}
+              onChange={(e) => setLat(e.target.value)}
+              className="w-full p-2 rounded bg-gray-800 text-white border-2 border-white"
+              required
+            />
+          </div>
+          <div className="w-1/2">
+            <label>Longitude *</label>
+            <input
+              type="text"
+              value={lng}
+              onChange={(e) => setLng(e.target.value)}
+              className="w-full p-2 rounded bg-gray-800 text-white border-2 border-white"
+              required
+            />
+          </div>
         </div>
-    );
+
+        {/* Address */}
+        <label className="mt-4 block">Address (optional)</label>
+        <input
+          type="text"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+          className="w-full p-2 mb-2 rounded bg-gray-800 text-white border-2 border-white"
+        />
+
+        {/* Landmark */}
+        <label className="block">Landmark / Nearby Area 🗺️ (optional)</label>
+        <input
+          type="text"
+          value={landmark}
+          onChange={(e) => setLandmark(e.target.value)}
+          className="w-full p-2 mb-2 rounded bg-gray-800 text-white border-2 border-white"
+        />
+
+        {/* Road Type Dropdown */}
+        <label className="block">Road Type 🛣️ (optional)</label>
+        <select
+          value={roadType}
+          onChange={(e) => setRoadType(e.target.value)}
+          className="w-full p-2 mb-2 rounded bg-gray-800 text-white border-2 border-white"
+        >
+          <option value="">--Select Road Type--</option>
+          <option value="Highway">Highway</option>
+          <option value="Main Road">Main Road</option>
+          <option value="Street">Street</option>
+          <option value="Internal Road">Internal Road</option>
+          <option value="Service Lane">Service Lane</option>
+        </select>
+
+        {/* Comments */}
+        <label className="block">Comments / Description 📝 (optional)</label>
+        <textarea
+          value={comments}
+          onChange={(e) => setComments(e.target.value)}
+          rows="3"
+          className="w-full p-2 mb-4 rounded bg-gray-800 text-white border-2 border-white"
+        />
+
+        <button
+          type="submit"
+          className={`w-full py-3 rounded text-white font-semibold transition duration-300 
+            ${loading ? 'bg-gray-600 cursor-not-allowed' : 'bg-[#2563EB] hover:bg-[#1D4ED8]'}`}
+          disabled={loading}
+        >
+          {loading ? 'Submitting...' : 'Submit Report'}
+        </button>
+      </form>
+    </div>
+  );
 };
 
 export default Report;
