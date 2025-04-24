@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import gsap from 'gsap';
 import { FaEnvelope, FaUserAlt } from 'react-icons/fa';
 import { useGSAP } from '@gsap/react';
-import Footer from './Footer';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 
 const AboutPage = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
   const images = [
     '/construction1.jpg',
     '/construction2.jpg',
@@ -23,7 +23,6 @@ const AboutPage = () => {
       y: 100,
       duration: 1,
       ease: 'power3.out',
-      
     });
 
     gsap.from('.contributors-box', {
@@ -34,9 +33,9 @@ const AboutPage = () => {
       scrollTrigger: {
         trigger: '.contributors-section',
         start: 'top 85%',
-        scrub:2,
+        scrub: 2,
       },
-      stagger:2,
+      stagger: 2,
     });
   }, []);
 
@@ -48,14 +47,42 @@ const AboutPage = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const contributors = [
+    {
+      name: 'Viraj',
+      roll: '23BD1A057V',
+      email: 'virajpalnitkar@gmail.com',
+      contribution: 'Integrated the core Transformer model and seamlessly connected it with the backend to power real-time road analysis.',
+    },
+    {
+      name: 'Umair',
+      roll: '23BD1A057B',
+      email: 'md.umair25524@gmail.com',
+      contribution: 'Contributed to building and refining the website frontend for a smooth and responsive user experience with precision.',
+    },
+    {
+      name: 'Rayan',
+      roll: '23BD1A056R',
+      email: 'skrayan0017@gmail.com',
+      contribution: 'Crafted the web frontend and played a key role in implementing the Transformer-based analysis engine.',
+    },
+    {
+      name: 'Rohan Reddy',
+      roll: '23BD1A0576',
+      email: 'talasanirohan006@gmail.com',
+      contribution: 'Worked on the React Native mobile interface, enhancing usability and field reporting capabilities',
+    },
+    {
+      name: 'Aditya',
+      roll: '23BD1A057M',
+      email: 'charybros12345@gmail.com',
+      contribution: 'Developed the mobile app using React Native, making road reporting accessible on the go.',
+    },
+  ];
+
   return (
     <>
-      {/* Section Divider */}
-      {/* <div className="relative w-full h-16 bg-gradient-to-b from-transparent to-gray-900"></div> */}
-
-      {/* About Section */}
       <div className="relative w-full min-h-screen flex items-center text-white text-left px-4 sm:px-10 font-[Poppins] about-section">
-        {/* Background Image */}
         <div className="absolute inset-0 w-full h-full">
           {images.map((img, index) => (
             <div
@@ -64,14 +91,10 @@ const AboutPage = () => {
                 index === currentImageIndex ? 'opacity-100' : 'opacity-0'
               }`}
               style={{ backgroundImage: `url(${img})` }}
-            ></div>
+            />
           ))}
         </div>
-
-        {/* Dark Overlay */}
         <div className="absolute inset-0 bg-black/50"></div>
-
-        {/* About Content */}
         <div className="about-box relative z-10 max-w-3xl p-6 sm:p-10 bg-black/40 backdrop-blur-md rounded-lg shadow-lg mx-auto mt-10 h-auto">
           <h1 className="text-3xl sm:text-5xl font-bold text-blue-300">About SafeStreet</h1>
           <p className="text-lg text-gray-200 mt-4 leading-relaxed">
@@ -96,46 +119,34 @@ const AboutPage = () => {
         </div>
       </div>
 
-      {/* Contributors Section */}
-{/* Contributors Section */}
-<div className="relative w-full py-16 bg-zinc-900 text-white contributors-section">
-  <h2 className="text-3xl sm:text-4xl font-bold text-center text-yellow-200 mb-12 tracking-wide underline">
-    Meet Our Contributors
-  </h2>
-
-  {/* Contributors Wrapper */}
-    <div className="flex justify-center flex-wrap gap-6 px-6 max-w-7xl mx-auto contributors-box">
-      {[
-        { name: 'Viraj', roll: '23BD1A057V', email: 'virajpalnitkar@gmail.com' },
-        { name: 'Umair', roll: '23BD1A057B', email: 'md.umair25524@gmail.com' },
-        { name: 'Rayan', roll: '23BD1A056R', email: 'skrayan0017@gmail.com' },
-        { name: 'Rohan Reddy', roll: '23BD1A0576', email: 'talasanirohan006@gmail.com' },
-        { name: 'Aditya', roll: '23BD1A057M', email: 'charybros12345@gmail.com' },
-      ].map((c, i) => (
-        <div
-          key={i}
-          className="bg-black/60 backdrop-blur-md p-6 sm:p-8 rounded-xl shadow-lg text-center border border-gray-700 
-                    hover:scale-105 hover:shadow-xl hover:bg-gradient-to-r hover:from-zinc-900 hover:to-cyan-800 
-                    transform transition-all duration-300 w-72"
-        >
-          <div className="mb-4">
-            <FaUserAlt className="text-4xl text-blue-400 mx-auto" />
-          </div>
-          <h3 className="text-2xl font-semibold text-white">{c.name}</h3>
-          <p className="text-lg text-gray-200 mt-2">{c.roll}</p>
-          <p className="text-sm text-gray-300 mt-2">
-            <FaEnvelope className="inline mr-2 text-white" />
-            {c.email}
-          </p>
+      <div className="relative w-full py-16 bg-zinc-900 text-white contributors-section">
+        <h2 className="text-3xl sm:text-4xl font-bold text-center text-yellow-200 mb-12 tracking-wide underline">
+          Meet Our Contributors
+        </h2>
+        <div className="flex flex-wrap justify-center gap-12 px-6 contributors-box">
+          {contributors.map((c, i) => (
+            <div key={i} className="group w-80 h-96 [perspective:1000px]">
+              <div className="relative w-full h-full transition-transform duration-700 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)] shadow-xl rounded-xl ">
+                {/* Front Side */}
+                <div className="absolute w-full h-full backface-hidden bg-zinc-800/80 backdrop-blur-md border border-cyan-500 p-6 rounded-xl flex flex-col justify-center items-center">
+                  <FaUserAlt className="text-4xl text-cyan-400 mb-4" />
+                  <h3 className="text-2xl font-semibold text-white text-center">{c.name}</h3>
+                  <p className="text-md text-gray-300 mt-2">{c.roll}</p>
+                  <p className="text-sm text-gray-400 mt-1 text-center break-words">
+                    <FaEnvelope className="inline mr-1 text-cyan-400" />{c.email}
+                  </p>
+                </div>
+                {/* Back Side */}
+                <div className="absolute w-full h-full backface-hidden [transform:rotateY(180deg)] bg-gradient-to-br from-zinc-900 to-cyan-800 p-6 rounded-xl flex items-center justify-center">
+                  <p className="text-lg text-white text-center leading-relaxed px-2">{c.contribution}</p>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
-    </div>
-  </div>
-
-
+      </div>
     </>
   );
 };
 
 export default AboutPage;
-
