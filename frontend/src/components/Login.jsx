@@ -5,6 +5,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import { ClipLoader } from 'react-spinners';
+
 
 const Login = ({setIsAuthenticated}) => {
 
@@ -113,14 +115,18 @@ const Login = ({setIsAuthenticated}) => {
                         value={password}
                         onChange={handleChange}
                         className='px-5 py-3 text-left w-full border-2 border-black mt-4 rounded-lg focus:outline-none focus:border-[#495F6A]' />
-                    <button
-                        type="submit"
-                        className={`w-full py-3 mt-4 text-lg rounded-lg text-white cursor-pointer 
-                                    ${loading ? 'bg-gray-500 cursor-not-allowed' : 'bg-[#495F6A]'}`}
-                        disabled={loading}
-                    >
-                        {loading ? 'Logging In...' : 'Login'}
-                    </button>
+                        <button
+                            type="submit"
+                            className={`w-full py-3 mt-4 text-lg rounded-lg text-white flex justify-center items-center
+                                        ${loading ? 'bg-gray-500 cursor-not-allowed' : 'bg-[#495F6A]'}`}
+                            disabled={loading}
+                        >
+                            {loading ? (
+                                <ClipLoader color="#ffffff" size={24} />
+                            ) : (
+                                'Login'
+                            )}
+                        </button>
                 </form>
                 <Link to="/signup" className='mt-4 mb-12'>Don't have an account? <span className='underline'>Sign Up</span></Link>
             </div>

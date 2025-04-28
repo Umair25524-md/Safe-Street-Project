@@ -12,6 +12,7 @@ import Analysis from "./components/Analysis";
 import Notifications from "./components/Notification";
 import Report from "./components/Report";
 import Advanced from "./components/Advanced";
+import VerifyEmail from "./components/verifyEmail";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -43,6 +44,7 @@ function App() {
         <Route path="/notifications" element={<Notifications />} />
         <Route path="/report" element={<Report />} />
         <Route path="/advanced" element={<Advanced />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
 
       </Routes>
     </Router>
@@ -51,7 +53,7 @@ function App() {
 
 const NavbarWrapper = ({ isAuthenticated, setIsAuthenticated }) => {
   const location = useLocation();
-  const hideNavbarRoutes = ['/login', '/signup'];
+  const hideNavbarRoutes = ['/login', '/signup','/verify-email'];
 
   return (
     !hideNavbarRoutes.includes(location.pathname) && 

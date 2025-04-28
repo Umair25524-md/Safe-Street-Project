@@ -5,6 +5,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import { ClipLoader } from 'react-spinners';
+
 
 const Signup = () => {
 
@@ -55,8 +57,8 @@ const Signup = () => {
         }
         try {
             const response = await axios.post('http://localhost:5000/signup', { name,email, password });
-            if (response.status === 201) {
-                notify("Successfully registered!", "success");
+            if (response.status === 200) {
+                notify("Successfully registered! A verification email has been sent.", "success");
                 setEmail('');
                 setPassword('');
                 setName('');
@@ -112,14 +114,18 @@ const Signup = () => {
                         value={password}
                         onChange={handleChange}
                         className='px-5 py-3 text-left w-full border-2 border-black mt-4 rounded-lg focus:outline-none focus:border-[#495F6A]'/>
-                    <button 
-                        type="submit"
-                        className={`w-full py-3 mt-4 text-lg rounded-lg text-white cursor-pointer 
-                                    ${loading ? 'bg-gray-500 cursor-not-allowed' : 'bg-[#495F6A]'}`}
-                        disabled={loading}
-                    >
-                        {loading ? 'Signing Up...' : 'Sign Up'}
-                    </button>
+                        <button 
+                            type="submit"
+                            className={`w-full py-3 mt-4 text-lg rounded-lg text-white flex justify-center items-center
+                                        ${loading ? 'bg-gray-500 cursor-not-allowed' : 'bg-[#495F6A]'}`}
+                            disabled={loading}
+                        >
+                            {loading ? (
+                                <ClipLoader color="#ffffff" size={24} />
+                            ) : (
+                                'Sign Up'
+                            )}
+                        </button>
                 </form>
                  <Link to="/login" className='mt-4 mb-12'>Already have an account? <span className='underline'>Login</span></Link>
             </div>
