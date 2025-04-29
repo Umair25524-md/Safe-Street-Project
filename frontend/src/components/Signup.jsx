@@ -90,7 +90,7 @@ const Signup = () => {
     return (
         <div className='flex justify-center items-center w-full h-[100vh] font-semibold relative'>
             <img src="./login-bg.jpg" alt="" className='absolute inset-0 object-cover w-full h-full'/>
-            <div className='flex flex-col justify-center items-center w-full max-w-md h-[500px] rounded-lg shadow-lg p-8 z-10 backdrop-blur-lg border-0.5 border-gray-400 sign-box'>
+            <div className='flex flex-col justify-center items-center w-full max-w-md h-[550px] rounded-lg shadow-lg p-8 z-10 backdrop-blur-lg border-0.5 border-gray-400 sign-box'>
                 <img src="./logo1.png" alt="" className=''/>
                 <form onSubmit={handleSubmit}>
                 <input 
@@ -99,25 +99,25 @@ const Signup = () => {
                         name='name'
                         value={name}
                         onChange={handleChange}
-                        className='px-5 py-3 text-left w-full border-2 border-black rounded-lg focus:outline-none focus:border-[#495F6A] mb-4'/>
+                        className='px-5 py-3 text-left w-full border-2 border-black rounded-full focus:outline-none focus:border-[#495F6A] mb-4'/>
                     <input 
                         type="email" 
                         placeholder='Email' 
                         name='email'
                         value={email}
                         onChange={handleChange}
-                        className='px-5 py-3 text-left w-full border-2 border-black rounded-lg focus:outline-none focus:border-[#495F6A]'/>
+                        className='px-5 py-3 text-left w-full border-2 border-black rounded-full focus:outline-none focus:border-[#495F6A]'/>
                     <input 
                         type="password" 
                         placeholder='Password' 
                         name='password'
                         value={password}
                         onChange={handleChange}
-                        className='px-5 py-3 text-left w-full border-2 border-black mt-4 rounded-lg focus:outline-none focus:border-[#495F6A]'/>
+                        className='px-5 py-3 text-left w-full border-2 border-black mt-4 rounded-full focus:outline-none focus:border-[#495F6A]'/>
                         <button 
                             type="submit"
-                            className={`w-full py-3 mt-4 text-lg rounded-lg text-white flex justify-center items-center
-                                        ${loading ? 'bg-gray-500 cursor-not-allowed' : 'bg-[#495F6A]'}`}
+                            className={`w-full py-3 mt-4 text-lg rounded-full text-white flex justify-center items-center cursor-pointer
+                                        ${loading ? 'bg-black cursor-not-allowed' : 'bg-black'}`}
                             disabled={loading}
                         >
                             {loading ? (
@@ -126,6 +126,7 @@ const Signup = () => {
                                 'Sign Up'
                             )}
                         </button>
+
                 </form>
                  <Link to="/login" className='mt-4 mb-12'>Already have an account? <span className='underline'>Login</span></Link>
             </div>

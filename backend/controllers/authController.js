@@ -3,6 +3,9 @@ const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 const User = require('../models/UserModel');
+const passport = require('passport')
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+
 
 // Setup Nodemailer transporter
 const transporter = nodemailer.createTransport({
@@ -169,4 +172,104 @@ const logout = (req, res) => {
     res.status(200).json({ message: "User logged out successfully" });
 };
 
-module.exports = { getAuthentication, logout, login, signup, verifyEmail };
+//GOOGLE LOGIN LOGIC
+// Configure Google OAuth Strategy
+passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL:"http://localhost:5000/auth/google/callback",
+    scope: ['profile', 'email']
+},
+async (accessToken, refreshToken, profile, done) => {
+    try {
+        // Check if user already exists in DB
+        let user = await User.findOne({ email: profile.emails[0].value });
+        
+        if (user) {
+            // If user exists but signed up with email/password before
+            if (user.authProvider === 'local') {
+                // Update user to have Google as an auth provider
+                user.authProvider = 'google';
+                user.googleId = profile.id;
+                user.isEmailVerified = true; // Google emails are verified
+                await user.save();
+            }
+        } else {
+            // Create new user
+            user = new User({
+                name: profile.displayName,
+                email: profile.emails[0].value,
+                googleId: profile.id,
+                authProvider: 'google',
+                isEmailVerified: true,
+                password: await bcrypt.hash(Math.random().toString(36).slice(-8), 10), // Random password
+            });
+            await user.save();
+        }
+        return done(null, user);
+    } catch (error) {
+        return done(error, null);
+    }
+}));
+
+// // Serialize and deserialize user
+// passport.serializeUser((user, done) => {
+//     done(null, user.id);
+// });
+
+// passport.deserializeUser(async (id, done) => {
+//     try {
+//         const user = await User.findById(id);
+//         done(null, user);
+//     } catch (error) {
+//         done(error, null);
+//     }
+// });
+
+
+
+
+const googleLogin = (req,res,next) => {
+    passport.authenticate('google',{
+        scope:['profile','email']
+    })(req,res,next);
+}
+
+const googleCallback = (req, res, next) => {
+    passport.authenticate('google', { session: false }, (err, user) => {
+        if (err) {
+            console.error("Google authentication error:", err);
+            return res.redirect(`http://localhost:5173/login?error=server_error`);
+        }
+        
+        if (!user) {
+            return res.redirect(`http://localhost:5173/login?error=authentication_failed`);
+        }
+        
+        // Generate JWT token
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+            expiresIn: process.env.JWT_EXPIRE
+        });
+        
+        // Set the JWT token in a cookie
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            maxAge: 24 * 60 * 60 * 1000
+        });
+        
+        const userData = encodeURIComponent(
+            JSON.stringify({
+              name: user.name,
+              email: user.email,
+            }),
+          )
+      
+          res.redirect(`http://localhost:5173?auth=google&userData=${userData}`)
+    })(req, res, next);
+};
+
+
+
+module.exports = { getAuthentication, logout, login, signup, verifyEmail,googleLogin,googleCallback };

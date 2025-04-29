@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const authRouter=require('./routes/authRoutes')
 const cookieParser = require('cookie-parser');
+const passport  = require('passport');
 
 const app = express();
 app.use(cors({
@@ -11,7 +12,7 @@ app.use(cors({
         credentials:true}));
 app.use(express.json());
 app.use(cookieParser());
-
+app.use(passport.initialize());
 
 mongoose.connect(process.env.MONGO_URI)
 .then(() => {
@@ -20,6 +21,7 @@ mongoose.connect(process.env.MONGO_URI)
 .catch((err) => console.log(err));
 
 app.use('/',authRouter);
+
 
 
 const port = process.env.PORT || 5000;

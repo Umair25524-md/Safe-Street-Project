@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState,useEffect } from 'react';
+import { Link, useNavigate,useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ClipLoader } from 'react-spinners';
+import { useGoogleLogin } from '@react-oauth/google';
 
 
 const Login = ({setIsAuthenticated}) => {
@@ -13,7 +14,6 @@ const Login = ({setIsAuthenticated}) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
-
     const navigate = useNavigate();
 
 
@@ -31,6 +31,7 @@ const Login = ({setIsAuthenticated}) => {
             progress: undefined,
         });
     };
+
 
 
 
@@ -94,6 +95,12 @@ const Login = ({setIsAuthenticated}) => {
         })
     },[])
 
+    const handleGoogleLogin = () => {
+        window.location.href = "http://localhost:5000/auth/google";
+    };
+    
+
+
     return (
         <div className='flex justify-center items-center w-full h-[100vh] font-semibold relative'>
             <img src="./login-bg.jpg" alt="" className='absolute inset-0 object-cover w-full h-full' />
@@ -107,18 +114,19 @@ const Login = ({setIsAuthenticated}) => {
                         value={email}
                         name='email'
                         onChange={handleChange}
-                        className='px-5 py-3 text-left w-full border-2 border-black rounded-lg focus:outline-none focus:border-[#495F6A]' />
+                        className='relative px-5 py-3 text-left w-full border-2 border-black rounded-full focus:outline-none focus:border-[#495F6A]' />
+                       {/* <i class="ri-user-fill"></i> */}
                     <input
                         type="password"
                         placeholder='Password'
                         name='password'
                         value={password}
                         onChange={handleChange}
-                        className='px-5 py-3 text-left w-full border-2 border-black mt-4 rounded-lg focus:outline-none focus:border-[#495F6A]' />
+                        className='px-5 py-3 text-left w-full border-2 border-black mt-4 rounded-full focus:outline-none focus:border-[#495F6A]' />
                         <button
                             type="submit"
-                            className={`w-full py-3 mt-4 text-lg rounded-lg text-white flex justify-center items-center
-                                        ${loading ? 'bg-gray-500 cursor-not-allowed' : 'bg-[#495F6A]'}`}
+                            className={`w-full py-3 mt-4 text-lg rounded-full text-white flex justify-center items-center cursor-pointer
+                                        ${loading ? 'bg-black cursor-not-allowed' : 'bg-black'}`}
                             disabled={loading}
                         >
                             {loading ? (
@@ -128,6 +136,10 @@ const Login = ({setIsAuthenticated}) => {
                             )}
                         </button>
                 </form>
+                <button className='w-full py-3 mt-4 text-lg rounded-full text-white flex justify-center items-center bg-black gap-3 cursor-pointer'
+                onClick={handleGoogleLogin}>
+                            <img src="./googlelogo.svg" alt="" className='w-6 h-6' /> Continue with Google
+                </button>
                 <Link to="/signup" className='mt-4 mb-12'>Don't have an account? <span className='underline'>Sign Up</span></Link>
             </div>
         </div>

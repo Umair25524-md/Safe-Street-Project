@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, useLocation,useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import 'remixicon/fonts/remixicon.css';
 import Navbar from "./components/Navbar";
@@ -13,6 +13,7 @@ import Notifications from "./components/Notification";
 import Report from "./components/Report";
 import Advanced from "./components/Advanced";
 import VerifyEmail from "./components/verifyEmail";
+
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -30,6 +31,7 @@ function App() {
     }
     checkAuth();
   }, []);
+
 
   return (
     <Router>

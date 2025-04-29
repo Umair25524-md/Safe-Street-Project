@@ -1,8 +1,29 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
+import { useLocation } from 'react-router-dom';
 
 const Hero = () => {
+
+  const location = useLocation();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const userData = params.get("userData");
+
+    if (userData) {
+      try {
+        const parsedData = JSON.parse(decodeURIComponent(userData));
+        localStorage.setItem("username", parsedData.name);
+        localStorage.setItem("email", parsedData.email);
+        console.log(parsedData.name);
+        console.log(parsedData.email);
+      } catch (error) {
+        console.error("Failed to parse userData:", error);
+      }
+    }
+  }, [location]);
+
 
   const [animationDone, setAnimationDone] = useState(false);
 
