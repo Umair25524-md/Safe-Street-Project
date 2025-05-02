@@ -30,8 +30,8 @@ const UserProfile = ({ setIsAuthenticated }) => {
     // Handle logout
     const handleLogout = () => {
         setIsAuthenticated(false);
-        localStorage.setItem('email',"none");
-        localStorage.setItem('username', "none");
+        // localStorage.setItem('email',"none");
+        // localStorage.setItem('username', "none");
         navigate('/login');
     };
 
