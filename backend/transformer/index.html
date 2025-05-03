@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Road Damage Analyzer</title>
+</head>
+<body>
+  <h1>Road Damage Report</h1>
+  <form id="uploadForm">
+    <label>
+      Image:
+      <input type="file" name="image" required>
+    </label><br><br>
+    <label>
+      Location:
+      <input type="text" name="location" required>
+    </label><br><br>
+    <label>
+      Date (YYYY-MM-DD):
+      <input type="date" name="date" required>
+    </label><br><br>
+    <label>
+      Reporter ID:
+      <input type="text" name="reporter_id" required>
+    </label><br><br>
+    <button type="submit">Analyze</button>
+  </form>
+
+  <h2>Response</h2>
+  <pre id="responseOutput"></pre>
+
+  <script>
+    document.getElementById('uploadForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const form = e.target;
+      const formData = new FormData(form);
+
+      try {
+        const res = await fetch('http://localhost:5000/analyze', {
+          method: 'POST',
+          body: formData
+        });
+
+        const result = await res.json();
+        document.getElementById('responseOutput').textContent = JSON.stringify(result, null, 2);
+      } catch (err) {
+        document.getElementById('responseOutput').textContent = 'Error: ' + err.message;
+      }
+    });
+  </script>
+</body>
+</html>
