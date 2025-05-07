@@ -4,8 +4,6 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const Report = () => {
   const [image, setImage] = useState(null);
-  const [lat, setLat] = useState('');
-  const [lng, setLng] = useState('');
   const [address, setAddress] = useState('');
   const [landmark, setLandmark] = useState('');
   const [roadType, setRoadType] = useState('');
@@ -27,8 +25,8 @@ const Report = () => {
   const report = async (e) => {
     e.preventDefault();
 
-    if (!image || !lat || !lng) {
-      notify("Image and coordinates are required.", "error");
+    if (!image) {
+      notify("Image required.", "error");
       return;
     }
 
@@ -36,15 +34,13 @@ const Report = () => {
 
     const formData = new FormData();
     formData.append('image', image);
-    formData.append('latitude', lat);
-    formData.append('longitude', lng);
     formData.append('address', address);
     formData.append('landmark', landmark);
     formData.append('roadType', roadType);
     formData.append('comments', comments);
 
     try {
-      const res = await fetch('http://localhost:5000/report-damage', {
+      const res = await fetch('http://localhost:5001/report-damage', {
         method: 'POST',
         body: formData,
       });
@@ -54,8 +50,6 @@ const Report = () => {
 
       // Reset fields after successful report
       setImage(null);
-      setLat('');
-      setLng('');
       setAddress('');
       setLandmark('');
       setRoadType('');
@@ -86,32 +80,9 @@ const Report = () => {
           className="w-full p-2 mb-4 rounded bg-gray-800 text-white border-2 border-white"
         />
 
-        {/* Coordinates */}
-        <div className="flex gap-4">
-          <div className="w-1/2">
-            <label>Latitude *</label>
-            <input
-              type="text"
-              value={lat}
-              onChange={(e) => setLat(e.target.value)}
-              className="w-full p-2 rounded bg-gray-800 text-white border-2 border-white"
-              required
-            />
-          </div>
-          <div className="w-1/2">
-            <label>Longitude *</label>
-            <input
-              type="text"
-              value={lng}
-              onChange={(e) => setLng(e.target.value)}
-              className="w-full p-2 rounded bg-gray-800 text-white border-2 border-white"
-              required
-            />
-          </div>
-        </div>
-
+      
         {/* Address */}
-        <label className="mt-4 block">Address (optional)</label>
+        <label className="mt-4 block">Address</label>
         <input
           type="text"
           value={address}
