@@ -1,4 +1,6 @@
-import { BrowserRouter as Router, Route, Routes, useLocation,useNavigate } from "react-router-dom";
+
+
+import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import 'remixicon/fonts/remixicon.css';
 import Navbar from "./components/Navbar";
@@ -13,11 +15,13 @@ import Notifications from "./components/Notification";
 import Report from "./components/Report";
 import Advanced from "./components/Advanced";
 import VerifyEmail from "./components/verifyEmail";
-
+import ProtectedRoute from "./components/ProtectedRoute"; // ✅ Import protected route
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userRole, setUserRole] = useState(null); // "admin" or "user"
 
+  // Fetch authentication status on app load
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -25,13 +29,14 @@ function App() {
           withCredentials: true
         });
         setIsAuthenticated(response.data.isAuthenticated);
+        setUserRole(response.data.role); // Assuming your backend returns { isAuthenticated, role }
       } catch (error) {
         setIsAuthenticated(false);
-      } 
-    }
+        setUserRole(null);
+      }
+    };
     checkAuth();
-  }, []);
-
+  }, []); // Empty dependency array ensures this runs only once
 
   return (
     <Router>
@@ -42,12 +47,36 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
-        <Route path="/analysis" element={<Analysis />} />
-        <Route path="/notifications" element={<Notifications />} />
-        <Route path="/report" element={<Report />} />
-        <Route path="/advanced" element={<Advanced />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route path="/advanced" element={<Advanced />} />
 
+        {/* Protected Routes for Admin */}
+        <Route
+          path="/analysis"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated} userRole={userRole}>
+              <Analysis />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/notifications"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated} userRole={userRole}>
+              <Notifications />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Protected Route for Report */}
+        <Route
+          path="/report"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated} userRole={userRole}>
+              <Report />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
   );
@@ -55,12 +84,13 @@ function App() {
 
 const NavbarWrapper = ({ isAuthenticated, setIsAuthenticated }) => {
   const location = useLocation();
-  const hideNavbarRoutes = ['/login', '/signup','/verify-email'];
+  const hideNavbarRoutes = ['/login', '/signup', '/verify-email'];
 
   return (
     !hideNavbarRoutes.includes(location.pathname) && 
     <Navbar isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />
   );
-}
+};
 
 export default App;
+
