@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import navElements from './index.js';
 import { Link, useLocation } from 'react-router-dom';
@@ -20,6 +19,10 @@ const Navbar = ({ isAuthenticated, setIsAuthenticated }) => {
       if (isAdmin) {
         return ['Home', 'Analysis', 'Notifications'].includes(label);
       } else {
+        return ['Home', 'Report Damage', 'History', 'About', 'Contact'].includes(label); // ✅ Include History for users
+      }
+    } else {
+      return ['Home', 'Report Damage', 'About', 'Contact'].includes(label);
         return ['Home', 'Report Damage', 'About', 'Contact'].includes(label);
       }
     } else {
