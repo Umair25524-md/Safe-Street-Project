@@ -18,6 +18,7 @@ import Advanced from "./components/Advanced";
 import VerifyEmail from "./components/verifyEmail";
 import ProtectedRoute from "./components/ProtectedRoute";
 import History from "./components/History"; // ✅ Newly added
+import ProtectedRoute from "./components/ProtectedRoute"; // ✅ Import protected route
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -32,6 +33,7 @@ function App() {
         });
         setIsAuthenticated(response.data.isAuthenticated);
         setUserRole(response.data.role); // Assuming backend returns { isAuthenticated, role }
+        setUserRole(response.data.role); // Assuming your backend returns { isAuthenticated, role }
       } catch (error) {
         setIsAuthenticated(false);
         setUserRole(null);
@@ -39,6 +41,7 @@ function App() {
     };
     checkAuth();
   }, []);
+  }, []); // Empty dependency array ensures this runs only once
 
   return (
     <Router>
@@ -71,6 +74,26 @@ function App() {
         />
 
         {/* ✅ Protected Route for Report */}
+
+        {/* Protected Routes for Admin */}
+        <Route
+          path="/analysis"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated} userRole={userRole}>
+              <Analysis />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/notifications"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated} userRole={userRole}>
+              <Notifications />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Protected Route for Report */}
         <Route
           path="/report"
           element={
@@ -106,3 +129,4 @@ const NavbarWrapper = ({ isAuthenticated, setIsAuthenticated }) => {
 };
 
 export default App;
+

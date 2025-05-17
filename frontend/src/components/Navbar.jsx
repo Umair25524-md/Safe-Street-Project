@@ -23,6 +23,10 @@ const Navbar = ({ isAuthenticated, setIsAuthenticated }) => {
       }
     } else {
       return ['Home', 'Report Damage', 'About', 'Contact'].includes(label);
+        return ['Home', 'Report Damage', 'About', 'Contact'].includes(label);
+      }
+    } else {
+      return ['Home', 'Report Damage', 'About', 'Contact'].includes(label); // Unauthenticated users only see these
     }
   });
 
