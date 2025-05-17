@@ -3,11 +3,12 @@
 import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import 'remixicon/fonts/remixicon.css';
+import axios from "axios";
+
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
-import axios from "axios";
 import AboutPage from "./components/About";
 import ContactPage from "./components/Contact";
 import Analysis from "./components/Analysis";
@@ -15,7 +16,8 @@ import Notifications from "./components/Notification";
 import Report from "./components/Report";
 import Advanced from "./components/Advanced";
 import VerifyEmail from "./components/verifyEmail";
-import ProtectedRoute from "./components/ProtectedRoute"; // ✅ Import protected route
+import ProtectedRoute from "./components/ProtectedRoute";
+import History from "./components/History"; // ✅ Newly added
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -29,14 +31,14 @@ function App() {
           withCredentials: true
         });
         setIsAuthenticated(response.data.isAuthenticated);
-        setUserRole(response.data.role); // Assuming your backend returns { isAuthenticated, role }
+        setUserRole(response.data.role); // Assuming backend returns { isAuthenticated, role }
       } catch (error) {
         setIsAuthenticated(false);
         setUserRole(null);
       }
     };
     checkAuth();
-  }, []); // Empty dependency array ensures this runs only once
+  }, []);
 
   return (
     <Router>
@@ -50,7 +52,7 @@ function App() {
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/advanced" element={<Advanced />} />
 
-        {/* Protected Routes for Admin */}
+        {/* ✅ Protected Routes for Admin */}
         <Route
           path="/analysis"
           element={
@@ -68,7 +70,7 @@ function App() {
           }
         />
 
-        {/* Protected Route for Report */}
+        {/* ✅ Protected Route for Report */}
         <Route
           path="/report"
           element={
@@ -77,20 +79,30 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        {/* ✅ New Protected Route for History */}
+        <Route
+          path="/history"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated} userRole={userRole}>
+              <History />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
   );
 }
 
+// Helper to hide navbar on certain routes
 const NavbarWrapper = ({ isAuthenticated, setIsAuthenticated }) => {
   const location = useLocation();
   const hideNavbarRoutes = ['/login', '/signup', '/verify-email'];
 
   return (
-    !hideNavbarRoutes.includes(location.pathname) && 
+    !hideNavbarRoutes.includes(location.pathname) &&
     <Navbar isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />
   );
 };
 
 export default App;
-
