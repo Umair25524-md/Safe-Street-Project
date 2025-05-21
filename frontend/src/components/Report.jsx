@@ -22,44 +22,44 @@ const Report = () => {
     });
   };
 
-  const report = async (e) => {
-    e.preventDefault();
+  // const report = async (e) => {
+  //   e.preventDefault();
 
-    if (!image) {
-      notify("Image required.", "error");
-      return;
-    }
+  //   if (!image) {
+  //     notify("Image required.", "error");
+  //     return;
+  //   }
 
-    setLoading(true);
+  //   setLoading(true);
 
-    const formData = new FormData();
-    formData.append('image', image);
-    formData.append('address', address);
-    formData.append('landmark', landmark);
-    formData.append('roadType', roadType);
-    formData.append('comments', comments);
+  //   const formData = new FormData();
+  //   formData.append('image', image);
+  //   formData.append('address', address);
+  //   formData.append('landmark', landmark);
+  //   formData.append('roadType', roadType);
+  //   formData.append('comments', comments);
 
-    try {
-      const res = await fetch('http://localhost:5001/report-damage', {
-        method: 'POST',
-        body: formData,
-      });
+  //   try {
+  //     const res = await fetch('http://localhost:5001/report-damage', {
+  //       method: 'POST',
+  //       body: formData,
+  //     });
 
-      const result = await res.json();
-      notify("Damage reported successfully!", "success");
+  //     const result = await res.json();
+  //     notify("Damage reported successfully!", "success");
 
-      // Reset fields after successful report
-      setImage(null);
-      setAddress('');
-      setLandmark('');
-      setRoadType('');
-      setComments('');
-    } catch (err) {
-      notify("Something went wrong. Try again later.", "error");
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     // Reset fields after successful report
+  //     setImage(null);
+  //     setAddress('');
+  //     setLandmark('');
+  //     setRoadType('');
+  //     setComments('');
+  //   } catch (err) {
+  //     notify("Something went wrong. Try again later.", "error");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#111827] text-white p-4">

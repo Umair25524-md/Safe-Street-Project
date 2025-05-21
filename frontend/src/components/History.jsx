@@ -285,7 +285,7 @@ const History = () => {
 
   return (
     <div className="min-h-screen bg-[#0C1327] p-6 text-indigo-100 w-full">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto mt-16">
         <h2 className="text-center text-3xl font-bold mb-8">History</h2>
 
         {/* Counts */}

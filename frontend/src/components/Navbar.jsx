@@ -22,10 +22,6 @@ const Navbar = ({ isAuthenticated, setIsAuthenticated }) => {
         return ['Home', 'Report Damage', 'History', 'About', 'Contact'].includes(label); // ✅ Include History for users
       }
     } else {
-      return ['Home', 'Report Damage', 'About', 'Contact'].includes(label);
-        return ['Home', 'Report Damage', 'About', 'Contact'].includes(label);
-      }
-    } else {
       return ['Home', 'Report Damage', 'About', 'Contact'].includes(label); // Unauthenticated users only see these
     }
   });

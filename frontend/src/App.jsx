@@ -1,5 +1,3 @@
-
-
 import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import 'remixicon/fonts/remixicon.css';
@@ -18,7 +16,6 @@ import Advanced from "./components/Advanced";
 import VerifyEmail from "./components/verifyEmail";
 import ProtectedRoute from "./components/ProtectedRoute";
 import History from "./components/History"; // ✅ Newly added
-import ProtectedRoute from "./components/ProtectedRoute"; // ✅ Import protected route
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -41,7 +38,6 @@ function App() {
     };
     checkAuth();
   }, []);
-  }, []); // Empty dependency array ensures this runs only once
 
   return (
     <Router>
