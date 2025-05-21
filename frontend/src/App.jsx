@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Route, Routes, useLocation } from "react-route
 import { useEffect, useState } from "react";
 import 'remixicon/fonts/remixicon.css';
 import axios from "axios";
-
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import Login from "./components/Login";
