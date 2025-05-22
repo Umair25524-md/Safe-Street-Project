@@ -1,189 +1,17 @@
-// import React, { useState } from 'react';
-// import { toast, ToastContainer } from 'react-toastify';
-// import 'react-toastify/dist/ReactToastify.css';
-
-// const Report = () => {
-//   const [image, setImage] = useState(null);
-//   const [address, setAddress] = useState('');
-//   const [landmark, setLandmark] = useState('');
-//   const [roadType, setRoadType] = useState('');
-//   const [comments, setComments] = useState('');
-//   const [loading, setLoading] = useState(false);
-
-//   const notify = (message, type) => {
-//     toast(message, {
-//       type,
-//       position: "top-center",
-//       autoClose: 2500,
-//       hideProgressBar: false,
-//       closeOnClick: true,
-//       pauseOnHover: true,
-//       theme: 'dark',
-//     });
-//   };
-
-//   const checkIfRoad = async () => {
-//     const formData = new FormData();
-//     formData.append('file', image);
-
-//     try {
-//       const res = await fetch('http://localhost:8000/check-road/', {
-//         method: 'POST',
-//         body: formData,
-//       });
-
-//       const data = await res.json();
-
-//       // For debugging you can log probabilities here
-//       // console.log('Road Probability:', data.road_probability);
-//       // console.log('Not Road Probability:', data.not_road_probability);
-
-//       // Use higher threshold for stricter validation
-//       console.log('Road Probability:', data.road_probability);
-//       return data.road_probability >= 0.6;
-//     } catch (err) {
-//       notify("Error checking road. Try again later.", "error");
-//       return false;
-//     }
-//   };
-
-//   const report = async (e) => {
-//     e.preventDefault();
-
-//     if (!image) {
-//       notify("Image required.", "error");
-//       return;
-//     }
-
-//     setLoading(true);
-
-//     const isRoad = await checkIfRoad();
-
-//     if (!isRoad) {
-//       notify("❌ This image doesn't seem to show a road!", "error");
-//       setLoading(false);
-//       return;
-//     }
-
-//     const formData = new FormData();
-//     formData.append('image', image);
-//     formData.append('address', address);
-//     formData.append('landmark', landmark);
-//     formData.append('roadType', roadType);
-//     formData.append('comments', comments);
-
-//     try {
-//       const res = await fetch('http://localhost:8000/report-damage/', {
-//         method: 'POST',
-//         body: formData,
-//       });
-
-//       if (!res.ok) {
-//         throw new Error("Failed to submit report");
-//       }
-
-//       await res.json();
-//       notify("✅ Damage reported successfully!", "success");
-
-//       // Reset fields
-//       setImage(null);
-//       setAddress('');
-//       setLandmark('');
-//       setRoadType('');
-//       setComments('');
-//     } catch (err) {
-//       notify("❌ Something went wrong. Try again later.", "error");
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   return (
-//     <div className="min-h-screen flex items-center justify-center bg-[#111827] text-white p-4">
-//       <ToastContainer />
-//       <form
-//         onSubmit={report}
-//         className="w-full max-w-lg bg-[#1F2937] p-6 rounded-xl shadow-xl mt-12"
-//       >
-//         <h2 className="text-2xl font-bold mb-6 text-center text-white">🚧 Report Road Damage</h2>
-
-//         <label className="block mb-2">Upload Image 📷 *</label>
-//         <input
-//           type="file"
-//           accept="image/*"
-//           onChange={(e) => setImage(e.target.files[0])}
-//           required
-//           className="w-full p-2 mb-4 rounded bg-gray-800 text-white border-2 border-white"
-//         />
-
-//         <label className="mt-4 block">Address</label>
-//         <input
-//           type="text"
-//           value={address}
-//           onChange={(e) => setAddress(e.target.value)}
-//           className="w-full p-2 mb-2 rounded bg-gray-800 text-white border-2 border-white"
-//         />
-
-//         <label className="block">Landmark / Nearby Area 🗺️ (optional)</label>
-//         <input
-//           type="text"
-//           value={landmark}
-//           onChange={(e) => setLandmark(e.target.value)}
-//           className="w-full p-2 mb-2 rounded bg-gray-800 text-white border-2 border-white"
-//         />
-
-//         <label className="block">Road Type 🛣️ (optional)</label>
-//         <select
-//           value={roadType}
-//           onChange={(e) => setRoadType(e.target.value)}
-//           className="w-full p-2 mb-2 rounded bg-gray-800 text-white border-2 border-white"
-//         >
-//           <option value="">--Select Road Type--</option>
-//           <option value="Highway">Highway</option>
-//           <option value="Main Road">Main Road</option>
-//           <option value="Street">Street</option>
-//           <option value="Internal Road">Internal Road</option>
-//           <option value="Service Lane">Service Lane</option>
-//         </select>
-
-//         <label className="block">Comments / Description 📝 (optional)</label>
-//         <textarea
-//           value={comments}
-//           onChange={(e) => setComments(e.target.value)}
-//           rows="3"
-//           className="w-full p-2 mb-4 rounded bg-gray-800 text-white border-2 border-white"
-//         />
-
-//         <button
-//           type="submit"
-//           className={`w-full py-3 rounded text-white font-semibold transition duration-300 
-//             ${loading ? 'bg-gray-600 cursor-not-allowed' : 'bg-[#2563EB] hover:bg-[#1D4ED8]'}`}
-//           disabled={loading}
-//         >
-//           {loading ? 'Submitting...' : 'Submit Report'}
-//         </button>
-//       </form>
-//     </div>
-//   );
-// };
-
-// export default Report;
-
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
+import { FiUploadCloud } from 'react-icons/fi';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Report = () => {
   const [image, setImage] = useState(null);
   const [address, setAddress] = useState('');
-  const [landmark, setLandmark] = useState('');
-  const [roadType, setRoadType] = useState('');
   const [comments, setComments] = useState('');
   const [loading, setLoading] = useState(false);
-
-  // Add a state to hold uncertain confirmation
   const [awaitUserConfirmation, setAwaitUserConfirmation] = useState(false);
   const [lastRoadProbability, setLastRoadProbability] = useState(null);
+  const [isDragOver, setIsDragOver] = useState(false);
+  const fileInputRef = useRef(null);
 
   const notify = (message, type) => {
     toast(message, {
@@ -210,89 +38,105 @@ const Report = () => {
       const data = await res.json();
       setLastRoadProbability(data.road_probability);
 
-      // Define thresholds
-      if (data.road_probability > 0.7) {
-        return true;  // definitely road
-      } else if (data.road_probability < 0.3) {
-        return false; // definitely not road
-      } else {
-        // uncertain zone
-        return null;  // ask user
-      }
+      if (data.road_probability > 0.7) return true;
+      if (data.road_probability < 0.3) return false;
+      return null;
     } catch (err) {
       notify("Error checking road. Try again later.", "error");
       return false;
     }
   };
 
-  const report = async (e) => {
-    e.preventDefault();
+const report = async (e) => {
+  e.preventDefault();
 
-    if (!image) {
-      notify("Image required.", "error");
-      return;
-    }
+  if (!image || !address.trim()) {
+    notify("All fields are required", "error");
+    return;
+  }
 
-    setLoading(true);
+  setLoading(true);
 
-    const isRoad = await checkIfRoad();
+  const isRoad = await checkIfRoad();
 
-    if (isRoad === false) {
-      notify("❌ This image doesn't seem to show a road!", "error");
-      setLoading(false);
-      return;
-    } else if (isRoad === null) {
-      // uncertain, ask user for confirmation
-      setLoading(false);
-      setAwaitUserConfirmation(true);
-      return;
-    }
+  if (isRoad === false) {
+    notify("❌ This image doesn't seem to show a road!", "error");
+    setLoading(false);
+    return;
+  } else if (isRoad === null) {
+    setLoading(false);
+    setAwaitUserConfirmation(true);
+    return;
+  }
 
-    // If confirmed or definitely road, submit
-    await submitReport();
-  };
+  await submitReport();
+};
 
-  const submitReport = async () => {
-    setLoading(true);
 
-    const formData = new FormData();
-    formData.append('image', image);
-    formData.append('address', address);
-    formData.append('landmark', landmark);
-    formData.append('roadType', roadType);
-    formData.append('comments', comments);
+const submitReport = async () => {
+  setLoading(true);
 
-    try {
-      const res = await fetch('http://localhost:8000/report-damage', {
-        method: 'POST',
-        body: formData,
-      });
+  const formData = new FormData();
+  formData.append('image', image);
+  formData.append('address', address);
+  formData.append('comments', comments);
 
-      const result = await res.json();
-      notify("✅ Damage reported successfully!", "success");
+  // Add email from localStorage
+  const email = localStorage.getItem('email');
+  if (email) {
+    formData.append('email', email);
+  }
 
-      // Reset fields
-      setImage(null);
-      setAddress('');
-      setLandmark('');
-      setRoadType('');
-      setComments('');
-    } catch (err) {
-      notify("❌ Something went wrong. Try again later.", "error");
-    } finally {
-      setLoading(false);
-      setAwaitUserConfirmation(false);
-      setLastRoadProbability(null);
-    }
-  };
+  // Add current submission date in ISO string format
+  const submissionDate = new Date().toISOString();
+  formData.append('submission_date', submissionDate);
+
+  try {
+    const res = await fetch('http://localhost:8000/report-damage', {
+      method: 'POST',
+      body: formData,
+    });
+
+    const result = await res.json();
+    notify("✅ Damage reported successfully!", "success");
+
+    setImage(null);
+    setAddress('');
+    setComments('');
+  } catch (err) {
+    notify("❌ Something went wrong. Try again later.", "error");
+  } finally {
+    setLoading(false);
+    setAwaitUserConfirmation(false);
+    setLastRoadProbability(null);
+  }
+};
+
 
   const handleUserConfirmation = (confirmed) => {
     setAwaitUserConfirmation(false);
+    if (confirmed) submitReport();
+    else notify("Report cancelled due to user confirmation.", "info");
+  };
 
-    if (confirmed) {
-      submitReport();
+  const handleFileDrop = (e) => {
+    e.preventDefault();
+    setIsDragOver(false);
+
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+      setImage(file);
     } else {
-      notify("Report cancelled due to user confirmation.", "info");
+      notify("Only image files are allowed.", "error");
+    }
+  };
+
+  const handleFileSelect = (e) => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+      setImage(file);
+    } else {
+      notify("Only image files are allowed.", "error");
     }
   };
 
@@ -304,46 +148,50 @@ const Report = () => {
         onSubmit={report}
         className="w-full max-w-lg bg-[#1F2937] p-6 rounded-xl shadow-xl mt-12"
       >
-        <h2 className="text-2xl font-bold mb-6 text-center text-white">🚧 Report Road Damage</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center">🚧 Report Road Damage</h2>
 
-        <label className="block mb-2">Upload Image 📷 *</label>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => setImage(e.target.files[0])}
-          required
-          className="w-full p-2 mb-4 rounded bg-gray-800 text-white border-2 border-white"
-        />
+        {/* Drag & Drop Upload */}
+        <div
+          className={`w-full border-2 border-dashed rounded-xl p-6 mb-4 flex flex-col items-center justify-center cursor-pointer transition 
+            ${isDragOver ? 'border-blue-400 bg-blue-900/30' : 'border-white/40 bg-gray-800'}`}
+          onClick={() => fileInputRef.current.click()}
+          onDragOver={(e) => {
+            e.preventDefault();
+            setIsDragOver(true);
+          }}
+          onDragLeave={() => setIsDragOver(false)}
+          onDrop={handleFileDrop}
+        >
+          <FiUploadCloud className="text-5xl mb-2 text-blue-400" />
+          <p className="text-sm text-center">Click or drag & drop an image to upload</p>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleFileSelect}
+            hidden
+          />
+        </div>
 
-        <label className="mt-4 block">Address</label>
+        {/* Image preview */}
+        {image && (
+          <div className="mb-4">
+            <p className="text-sm mb-2 text-center">📷 Preview:</p>
+            <img
+              src={URL.createObjectURL(image)}
+              alt="Preview"
+              className="w-full h-64 object-cover rounded-lg border border-white/30"
+            />
+          </div>
+        )}
+
+        <label className="block mb-1 mt-2">Address</label>
         <input
           type="text"
           value={address}
           onChange={(e) => setAddress(e.target.value)}
-          className="w-full p-2 mb-2 rounded bg-gray-800 text-white border-2 border-white"
+          className="w-full p-2 mb-3 rounded bg-gray-800 text-white border-2 border-white"
         />
-
-        <label className="block">Landmark / Nearby Area 🗺️ (optional)</label>
-        <input
-          type="text"
-          value={landmark}
-          onChange={(e) => setLandmark(e.target.value)}
-          className="w-full p-2 mb-2 rounded bg-gray-800 text-white border-2 border-white"
-        />
-
-        <label className="block">Road Type 🛣️ (optional)</label>
-        <select
-          value={roadType}
-          onChange={(e) => setRoadType(e.target.value)}
-          className="w-full p-2 mb-2 rounded bg-gray-800 text-white border-2 border-white"
-        >
-          <option value="">--Select Road Type--</option>
-          <option value="Highway">Highway</option>
-          <option value="Main Road">Main Road</option>
-          <option value="Street">Street</option>
-          <option value="Internal Road">Internal Road</option>
-          <option value="Service Lane">Service Lane</option>
-        </select>
 
         <label className="block">Comments / Description 📝 (optional)</label>
         <textarea
@@ -355,7 +203,7 @@ const Report = () => {
 
         <button
           type="submit"
-          className={`w-full py-3 rounded text-white font-semibold transition duration-300 
+          className={`w-full py-3 rounded text-white font-semibold transition duration-300  cursor-pointer
             ${loading ? 'bg-gray-600 cursor-not-allowed' : 'bg-[#2563EB] hover:bg-[#1D4ED8]'}`}
           disabled={loading}
         >
@@ -363,9 +211,9 @@ const Report = () => {
         </button>
       </form>
 
-      {/* Confirmation modal if uncertain */}
+      {/* User confirmation modal */}
       {awaitUserConfirmation && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex flex-col items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50">
           <div className="bg-[#1F2937] p-6 rounded-xl shadow-lg max-w-md text-center">
             <h3 className="text-xl font-semibold mb-4">
               The image confidence for being a road is uncertain ({(lastRoadProbability * 100).toFixed(1)}%).
