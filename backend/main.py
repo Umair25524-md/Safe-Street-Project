@@ -158,3 +158,4 @@ def get_reports_by_email(email: str):
         raise HTTPException(status_code=404, detail="No reports found for this email.")
     serialized = [serialize_report(report) for report in reports]
     return {"reports": serialized}
+#uvicorn main:app --host 0.0.0.0 --port 8000 --reload
