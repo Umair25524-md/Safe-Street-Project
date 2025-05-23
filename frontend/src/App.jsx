@@ -16,6 +16,7 @@ import VerifyEmail from "./components/verifyEmail";
 import ProtectedRoute from "./components/ProtectedRoute";
 import History from "./components/History"; // ✅ Newly added
 
+
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState(null); // "admin" or "user"
@@ -109,6 +110,7 @@ function App() {
         />
       </Routes>
     </Router>
+    
   );
 }
 
