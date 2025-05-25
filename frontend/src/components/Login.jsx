@@ -59,7 +59,7 @@ const Login = ({setIsAuthenticated}) => {
 
         try {
             const response = await axios.post('http://localhost:5000/login', { email, password },{
-              withCredentials:true
+              withCredentials:true  
             });
             if (response.status === 200) {
                 notify("Login Successful!", "success");

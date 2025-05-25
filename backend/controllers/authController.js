@@ -256,7 +256,7 @@ const googleCallback = (req, res, next) => {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'lax',
-            maxAge: 24 * 60 * 60 * 1000
+            maxAge: 60 * 60 * 1000 // 1 hour in milliseconds
         });
         
         const userData = encodeURIComponent(

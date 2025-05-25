@@ -196,7 +196,7 @@ const Analysis = () => {
               </tr>
             </thead>
             <tbody>
-              {reports.map((report, index) => (
+              {reports.slice(0,10).map((report, index) => (
                 <tr
                   key={index}
                   className={`${

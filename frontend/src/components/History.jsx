@@ -63,7 +63,7 @@ const History = () => {
         return "bg-red-600";
       case "Moderate":
         return "bg-yellow-600";
-      case "Mild":
+      case "Minor":
         return "bg-green-600";
       default:
         return "bg-gray-600";

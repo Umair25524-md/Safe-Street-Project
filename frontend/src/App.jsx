@@ -19,7 +19,6 @@ import History from "./components/History"; // ✅ Newly added
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userRole, setUserRole] = useState(null); // "admin" or "user"
 
   // Fetch authentication status on app load
   useEffect(() => {
@@ -29,11 +28,8 @@ function App() {
           withCredentials: true
         });
         setIsAuthenticated(response.data.isAuthenticated);
-        setUserRole(response.data.role); // Assuming backend returns { isAuthenticated, role }
-        setUserRole(response.data.role); // Assuming your backend returns { isAuthenticated, role }
       } catch (error) {
         setIsAuthenticated(false);
-        setUserRole(null);
       }
     };
     checkAuth();
@@ -51,11 +47,11 @@ function App() {
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/advanced" element={<Advanced />} />
 
-        {/* ✅ Protected Routes for Admin */}
+        {/* Protected Routes */}
         <Route
           path="/analysis"
           element={
-            <ProtectedRoute isAuthenticated={isAuthenticated} userRole={userRole}>
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
               <Analysis />
             </ProtectedRoute>
           }
@@ -63,54 +59,29 @@ function App() {
         <Route
           path="/notifications"
           element={
-            <ProtectedRoute isAuthenticated={isAuthenticated} userRole={userRole}>
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
               <Notifications />
             </ProtectedRoute>
           }
         />
-
-        {/* ✅ Protected Route for Report */}
-
-        {/* Protected Routes for Admin */}
-        <Route
-          path="/analysis"
-          element={
-            <ProtectedRoute isAuthenticated={isAuthenticated} userRole={userRole}>
-              <Analysis />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/notifications"
-          element={
-            <ProtectedRoute isAuthenticated={isAuthenticated} userRole={userRole}>
-              <Notifications />
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Protected Route for Report */}
         <Route
           path="/report"
           element={
-            <ProtectedRoute isAuthenticated={isAuthenticated} userRole={userRole}>
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
               <Report />
             </ProtectedRoute>
           }
         />
-
-        {/* ✅ New Protected Route for History */}
         <Route
           path="/history"
           element={
-            <ProtectedRoute isAuthenticated={isAuthenticated} userRole={userRole}>
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
               <History />
             </ProtectedRoute>
           }
         />
       </Routes>
     </Router>
-    
   );
 }
 
@@ -126,4 +97,3 @@ const NavbarWrapper = ({ isAuthenticated, setIsAuthenticated }) => {
 };
 
 export default App;
-
