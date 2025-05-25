@@ -16,7 +16,6 @@ import VerifyEmail from "./components/verifyEmail";
 import ProtectedRoute from "./components/ProtectedRoute";
 import History from "./components/History"; // ✅ Newly added
 
-
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -35,7 +34,7 @@ function App() {
     checkAuth();
   }, []);
 
-  return (
+  return (  
     <Router>
       <NavbarWrapper isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />
       <Routes>

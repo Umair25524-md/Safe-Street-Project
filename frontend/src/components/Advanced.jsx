@@ -45,7 +45,7 @@ const Advanced = () => {
       const response = await fetch(`http://localhost:8000/reports/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "resolved" }),  // all lowercase to match MongoDB
+        body: JSON.stringify({ status: "resolved" }),
       });
       if (!response.ok) throw new Error("Failed to update status");
 
@@ -97,6 +97,79 @@ const Advanced = () => {
     }
   }, [reports, sortType]);
 
+  // Separate reports by status
+  const pendingReports = sortedReports.filter(r => (r.status?.toLowerCase() !== 'resolved'));
+  const resolvedReports = sortedReports.filter(r => (r.status?.toLowerCase() === 'resolved'));
+
+  const renderReportCard = (report, index) => {
+    const reportStatus = (report.status ?? "pending").toLowerCase();
+    return (
+      <div
+        key={report._id}
+        ref={(el) => (reportsRef.current[index] = el)}
+        className="cards bg-black/80 backdrop-blur-lg text-white p-6 rounded-lg shadow-lg border border-gray-700 w-80 h-auto"
+      >
+        <h2 className="text-xl font-semibold text-yellow-300 mb-4">
+          Report #{index + 1}
+        </h2>
+        <img
+          src={`data:${report.image_type};base64,${report.image_base64}`}
+          alt="Reported Damage"
+          className="w-full h-40 object-cover rounded-lg mb-4"
+        />
+        <p><span className="text-gray-400">📍 Location:</span> {report.address}</p>
+        <p><span className="text-gray-400">🚧 Damage Type:</span> {report.damage_type}</p>
+        <p className="text-gray-400">📅 Date: {new Date(report.submission_date).toLocaleString()}</p>
+        <p className="text-gray-400">
+          📝 Summary: <span className="text-white">{report.summary}</span>
+        </p>
+        <p className={`${
+          report.severity === "Severe"
+            ? "text-red-400"
+            : report.severity === "Moderate"
+            ? "text-yellow-400"
+            : "text-green-400"
+        } font-semibold mt-2`}>
+          ⚠ Severity: {report.severity}
+        </p>
+
+        <p className="mt-3 font-semibold text-sm flex items-center gap-2">
+          <span className="text-gray-400">Status:</span>
+          <span className={`
+            px-3 py-1 rounded-full font-medium
+            ${
+              reportStatus === "resolved"
+                ? "bg-green-600 text-white"
+                : reportStatus === "pending"
+                ? "bg-yellow-500 text-white"
+                : "bg-gray-600 text-gray-200"
+            }
+          `}>
+            {reportStatus.charAt(0).toUpperCase() + reportStatus.slice(1)}
+          </span>
+        </p>
+
+        {reportStatus === "pending" && (
+          <div className="mt-6 flex flex-col gap-4">
+            <button
+              onClick={() => handleResolved(report._id)}
+              className="bg-green-600 px-6 py-3 rounded-lg shadow-md font-semibold text-white focus:outline-none cursor-pointer"
+            >
+              Resolved
+            </button>
+            <button
+              onClick={() => handleNotDamaged(report._id)}
+              className="bg-red-600 px-6 py-3 rounded-lg shadow-md font-semibold text-white focus:outline-none cursor-pointer"
+              aria-label="Mark as not damaged"
+            >
+              &#x2716;
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <div className="font-[Poppins] min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white p-8 font-semibold overflow-auto">
       <button
@@ -136,80 +209,33 @@ const Advanced = () => {
         </select>
       </div>
 
-      {/* Reports */}
-      <div className="flex flex-wrap justify-center gap-6">
-        {sortedReports.map((report, index) => {
-          const reportStatus = (report.status ?? "pending").toLowerCase(); // normalize to lowercase
-          return (
-            <div
-              key={report._id}
-              ref={(el) => (reportsRef.current[index] = el)}
-              className="cards bg-black/80 backdrop-blur-lg text-white p-6 rounded-lg shadow-lg border border-gray-700 w-80 h-auto"
-            >
-              <h2 className="text-xl font-semibold text-yellow-300 mb-4">
-                Report #{index + 1}
-              </h2>
-              <img
-                src={`data:${report.image_type};base64,${report.image_base64}`}
-                alt="Reported Damage"
-                className="w-full h-40 object-cover rounded-lg mb-4"
-              />
-              <p><span className="text-gray-400">📍 Location:</span> {report.address}</p>
-              <p><span className="text-gray-400">🚧 Damage Type:</span> {report.damage_type}</p>
-              <p className="text-gray-400">📅 Date: {new Date(report.submission_date).toLocaleString()}</p>
-              <p className="text-gray-400">
-                📝 Summary: <span className="text-white">{report.summary}</span>
-              </p>
-              <p className={`${
-                report.severity === "Severe"
-                  ? "text-red-400"
-                  : report.severity === "Moderate"
-                  ? "text-yellow-400"
-                  : "text-green-400"
-              } font-semibold mt-2`}>
-                ⚠ Severity: {report.severity}
-              </p>
+      {/* Pending Reports Section */}
+      <section className="mb-10 w-full max-w-7xl mx-auto">
+        <h2 className="text-2xl font-semibold mb-4 text-amber-400 underline">
+          Pending Reports
+        </h2>
+        <div className="flex flex-wrap justify-center gap-6">
+          {pendingReports.length > 0 ? (
+            pendingReports.map((report, idx) => renderReportCard(report, idx))
+          ) : (
+            <p className="text-gray-400 italic">No pending reports.</p>
+          )}
+        </div>
+      </section>
 
-              <p className="mt-3 font-semibold text-sm flex items-center gap-2">
-                <span className="text-gray-400">Status:</span>
-                <span className={`
-                  px-3 py-1 rounded-full font-medium
-                  ${
-                    reportStatus === "resolved"
-                      ? "bg-green-600 text-white"
-                      : reportStatus === "pending"
-                      ? "bg-yellow-500 text-white"
-                      : "bg-gray-600 text-gray-200"
-                  }
-                `}>
-                  {reportStatus.charAt(0).toUpperCase() + reportStatus.slice(1)}
-                </span>
-              </p>
-
-
-
-              {/* Action Buttons */}
-              {reportStatus === "pending" && (
-                <div className="mt-6 flex flex-col gap-4">
-                  <button
-                    onClick={() => handleResolved(report._id)}
-                    className="bg-green-600 px-6 py-3 rounded-lg shadow-md font-semibold text-white focus:outline-none cursor-pointer"
-                  >
-                    Resolved
-                  </button>
-                  <button
-                    onClick={() => handleNotDamaged(report._id)}
-                    className="bg-red-600 px-6 py-3 rounded-lg shadow-md font-semibold text-white focus:outline-none cursor-pointer"
-                    aria-label="Mark as not damaged"
-                  >
-                    &#x2716;
-                  </button>
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
+      {/* Resolved Reports Section */}
+      <section className="mb-10 w-full max-w-7xl mx-auto">
+        <h2 className="text-2xl font-semibold mb-4 text-green-400 underline">
+          Resolved Reports
+        </h2>
+        <div className="flex flex-wrap justify-center gap-6">
+          {resolvedReports.length > 0 ? (
+            resolvedReports.map((report, idx) => renderReportCard(report, idx))
+          ) : (
+            <p className="text-gray-400 italic">No resolved reports.</p>
+          )}
+        </div>
+      </section>
 
       <ToastContainer />
     </div>
