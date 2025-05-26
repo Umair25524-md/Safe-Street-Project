@@ -22,6 +22,7 @@ db = client["damage_reports"]
 collection = db["reports"]
 
 notifications_collection = db["admin_notifications"]
+user_notifications_collection = db["user_notifications"]
 
 
 # FastAPI setup
@@ -207,26 +208,42 @@ async def delete_report(report_id: str):
 @app.patch("/reports/{report_id}")
 async def patch_report(report_id: str, update_data: dict = Body(...)):
     try:
-        # Only allow specific fields to be updated (you can expand this list)
         allowed_fields = {"status"}
-
-        # Filter incoming fields
         update_fields = {k: v for k, v in update_data.items() if k in allowed_fields}
+
         if not update_fields:
             return {"message": "No valid fields to update."}
+
+        report = collection.find_one({"_id": ObjectId(report_id)})
+        if not report:
+            return {"error": "Report not found."}
 
         result = collection.update_one(
             {"_id": ObjectId(report_id)},
             {"$set": update_fields}
         )
-        if result.matched_count == 0:
-            return {"error": "Report not found."}
+
+        if result.modified_count > 0 and "status" in update_fields:
+            # Insert a new user notification
+            user_notifications_collection.insert_one({
+                "email": report["email"],
+                "report_id": report_id,
+                "status": update_fields["status"],
+                "message": f"Your report for '{report['damage_type']}' at '{report['address']}' has been {update_fields['status']}.",
+                "is_read": False,
+                "created_at": datetime.utcnow()
+            })
+
         if result.modified_count == 0:
             return {"message": "No changes made."}
 
-        return {"message": "✅ Report updated successfully", "updated_fields": update_fields}
+        return {
+            "message": "✅ Report updated successfully",
+            "updated_fields": update_fields
+        }
     except Exception as e:
         return {"error": str(e)}
+
     
 
 @app.get("/admin-notifications/")
@@ -240,6 +257,21 @@ def get_admin_notifications():
 @app.delete("/admin-notifications/{notification_id}")
 async def delete_admin_notification(notification_id: str):
     result = notifications_collection.delete_one({"_id": ObjectId(notification_id)})
+    if result.deleted_count == 1:
+        return {"message": "Notification deleted successfully"}
+    else:
+        raise HTTPException(status_code=404, detail="Notification not found")
+
+@app.get("/user-notifications/{email}")
+def get_user_notifications(email: str):
+    notifications = list(user_notifications_collection.find({"email": email}).sort("created_at", -1))
+    for notif in notifications:
+        notif["_id"] = str(notif["_id"])
+    return {"notifications": notifications}
+
+@app.delete("/user-notifications/{notification_id}")
+async def delete_user_notification(notification_id: str):
+    result = user_notifications_collection.delete_one({"_id": ObjectId(notification_id)})
     if result.deleted_count == 1:
         return {"message": "Notification deleted successfully"}
     else:

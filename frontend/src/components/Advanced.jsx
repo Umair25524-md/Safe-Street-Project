@@ -211,7 +211,7 @@ const Advanced = () => {
 
       {/* Pending Reports Section */}
       <section className="mb-10 w-full max-w-7xl mx-auto">
-        <h2 className="text-2xl font-semibold mb-4 text-amber-400 underline">
+        <h2 className="text-2xl font-semibold mb-4 text-amber-400 underline text-center">
           Pending Reports
         </h2>
         <div className="flex flex-wrap justify-center gap-6">
@@ -225,7 +225,7 @@ const Advanced = () => {
 
       {/* Resolved Reports Section */}
       <section className="mb-10 w-full max-w-7xl mx-auto">
-        <h2 className="text-2xl font-semibold mb-4 text-green-400 underline">
+        <h2 className="text-2xl font-semibold mb-4 text-green-400 underline text-center">
           Resolved Reports
         </h2>
         <div className="flex flex-wrap justify-center gap-6">

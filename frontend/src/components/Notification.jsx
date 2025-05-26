@@ -1,166 +1,150 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { formatDistanceToNow } from "date-fns";
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, Animated, Alert, ActivityIndicator } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
+import { Swipeable } from 'react-native-gesture-handler';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Notifications = () => {
-  const [news, setNews] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+dayjs.extend(relativeTime);
+
+export default function NotificationsScreen() {
   const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const fadeAnims = useRef({}).current;
 
+  // Fetch notifications after getting email from AsyncStorage
   useEffect(() => {
-    const fetchNews = async () => {
+    const fetchNotifications = async () => {
       try {
-        const response = await axios.get(
-          "https://newsdata.io/api/1/news?apikey=pub_71624bf67e3a28e68706a8503cd06cd1ce68d&q=road%20damage&country=in&language=en"
-        );
-        setNews(response.data.results || []);
+        const userEmail = await AsyncStorage.getItem('userEmail');
+        if (!userEmail) {
+          Alert.alert('Error', 'User email not found in storage');
+          setLoading(false);
+          return;
+        }
+        const response = await fetch(`http://192.168.29.37:8000/user-notifications/${userEmail}`);
+        const data = await response.json();
+        const fetched = data.notifications || [];
+        setNotifications(fetched);
+        setLoading(false);
       } catch (error) {
-        setError("Failed to load news.");
-      } finally {
+        Alert.alert('Error', 'Failed to load notifications');
         setLoading(false);
       }
     };
 
-    fetchNews();
     fetchNotifications();
   }, []);
 
-  const fetchNotifications = async () => {
+  useEffect(() => {
+    // Initialize fade values for each notification
+    notifications.forEach((note) => {
+      if (!fadeAnims[note._id]) {
+        fadeAnims[note._id] = new Animated.Value(1);
+      }
+    });
+  }, [notifications]);
+
+  const deleteNotification = async (id) => {
     try {
-      const response = await fetch("http://localhost:8000/admin-notifications/");
-      const data = await response.json();
-      const sortedNotifications = (data.notifications || []).sort(
-        (a, b) => new Date(b.created_at) - new Date(a.created_at)
-      );
-      setNotifications(sortedNotifications);
-      console.log("Notifications fetched successfully:", sortedNotifications);
+      // Call backend delete API
+      const response = await fetch(`http://192.168.29.37:8000/user-notifications/${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Failed to delete notification');
+      }
+
+      // Animate fade out
+      Animated.timing(fadeAnims[id], {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }).start(() => {
+        setNotifications((prev) => prev.filter((note) => note._id !== id));
+        delete fadeAnims[id];
+      });
     } catch (error) {
-      console.error("Error fetching notifications:", error);
+      Alert.alert('Error', error.message);
     }
   };
 
-  const handleDelete = async (id) => {
-    try {
-      await fetch(`http://localhost:8000/admin-notifications/${id}`, {
-        method: "DELETE",
-      });
-      fetchNotifications();
-    } catch (error) {
-      console.error("Failed to delete notification:", error);
-    }
+  const renderRightActions = (id) => (
+    <View className="flex-row mt-1 mb-2">
+      <TouchableOpacity
+        className="bg-red-600 justify-center items-center w-16 rounded-r-md"
+        onPress={() => deleteNotification(id)}
+      >
+        <MaterialIcons name="delete" size={24} color="white" />
+      </TouchableOpacity>
+    </View>
+  );
+
+  const NotificationItem = ({ note, isLast }) => {
+    // Convert UTC to local date before showing relative time
+    const localDate = dayjs(note.created_at).local();
+
+    return (
+      <View>
+        <Swipeable renderRightActions={() => renderRightActions(note._id)}>
+          <Animated.View
+            style={{ opacity: fadeAnims[note._id] || new Animated.Value(1) }}
+            className="mb-1 p-4 rounded-xl shadow-md bg-slate-700 border border-slate-600"
+          >
+            <View>
+              <Text className="text-sm text-blue-200 mt-1">{note.message}</Text>
+              <Text className="text-xs text-blue-300 mt-2">
+                {localDate.fromNow()}
+              </Text>
+            </View>
+          </Animated.View>
+        </Swipeable>
+        {!isLast && <View className="h-px bg-slate-700 mx-4 my-2" />}
+      </View>
+    );
   };
+
+  if (loading) {
+    return (
+      <View className="flex-1 justify-center items-center bg-slate-900">
+        <ActivityIndicator size="large" color="#60A5FA" />
+      </View>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white px-4 py-8 md:px-10">
-      {/* Title */}
-      <h1 className="fade-in text-4xl font-extrabold text-yellow-400 text-center mb-8 md:text-5xl mt-20">
-        🚧 Notifications & Updates 🛑
-      </h1>
+    <View className="flex-1 bg-slate-900">
+      {/* Header */}
+      <View className="bg-slate-800 p-4 shadow-md">
+        <Text className="text-xl font-bold text-white">Notifications</Text>
+      </View>
 
-      {/* 🔔 Latest Notifications */}
-      <div className="fade-in bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
-        <h2 className="text-2xl font-semibold text-purple-300 mb-4">
-          🔔 Latest Reports
-        </h2>
-        {notifications.length === 0 ? (
-          <p className="text-gray-400 text-center">
-            No recent notifications available.
-          </p>
+      {/* Notifications List */}
+      <ScrollView className="flex-1 p-4 pt-2">
+        <Text className="text-blue-300 text-xs mb-2 px-1">
+          {notifications.length} {notifications.length === 1 ? 'notification' : 'notifications'}
+        </Text>
+
+        {notifications.length > 0 ? (
+          notifications.map((note, index) => (
+            <NotificationItem
+              key={note._id}
+              note={note}
+              isLast={index === notifications.length - 1}
+            />
+          ))
         ) : (
-          <ul className="space-y-4">
-            {notifications
-              .slice(0,10)
-              .map((notif) => {
-                const createdAtIST = new Date(new Date(notif.created_at).getTime() + 5.5 * 60 * 60 * 1000);
-                const timeAgo = formatDistanceToNow(createdAtIST, { addSuffix: true }).replace("about ", "");
-                return (
-                  <li
-                    key={notif._id}
-                    className="bg-gray-700 p-4 rounded-md shadow-sm border-l-4 border-yellow-400 flex justify-between items-start"
-                  >
-                    <div>
-                      📍 New road damage reported at{" "}
-                      <span className="text-yellow-300 font-medium">
-                        {notif.address}
-                      </span>{" "}
-                      —{" "}
-                      <span className="text-red-300">{notif.damage_type}</span>,{" "}
-                      <span className="text-orange-300">{notif.severity}</span> by
-                      user: <span className="text-blue-300">{notif.email}</span>
-                      <p className="text-sm text-gray-400 mt-1">
-                        {timeAgo}
-                      </p>
-                    </div>
-                    <button
-                      onClick={() => handleDelete(notif._id)}
-                      aria-label="Delete notification"
-                      className="ml-4 text-red-400 hover:text-red-600 text-xl mt-1"
-                      title="Delete notification"
-                    >
-                      <i className="ri-delete-bin-6-line"></i>
-                    </button>
-                  </li>
-                );
-              })}
-          </ul>
+          <View className="flex-1 items-center justify-center py-16 bg-slate-800 rounded-xl shadow-lg border border-slate-700 mt-2">
+            <MaterialIcons name="notifications-off" size={64} color="#60A5FA" />
+            <Text className="text-blue-100 text-lg mt-4">No notifications</Text>
+            <Text className="text-blue-300 text-sm text-center mt-2 px-6">
+              You're all caught up!
+            </Text>
+          </View>
         )}
-      </div>
-
-      {/* News Section */}
-      <div className="fade-in bg-gray-800 p-6 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-semibold text-green-300 mb-4">
-          📰 Latest Road Damage News
-        </h2>
-
-        {loading ? (
-          <p className="text-gray-400 mt-2 text-center">Loading news...</p>
-        ) : error ? (
-          <p className="text-red-400 mt-2 text-center">{error}</p>
-        ) : news.length === 0 ? (
-          <p className="text-gray-400 mt-2 text-center">No recent news available.</p>
-        ) : (
-          <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 mt-4">
-            {news.map((article, index) => (
-              <li
-                key={index}
-                className="news-card fade-in bg-gray-700 p-5 rounded-lg shadow-md hover:shadow-xl hover:-translate-y-2 transition-transform duration-300"
-              >
-                <a
-                  href={article.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-400 hover:underline text-lg font-semibold block mb-2"
-                >
-                  {article.title}
-                </a>
-                <p className="text-sm text-gray-400">
-                  📅 {new Date(article.pubDate).toLocaleDateString()}
-                </p>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-
-      {/* Fade-In Animation */}
-      <style jsx>{`
-        .fade-in {
-          opacity: 0;
-          animation: fadeIn 1s ease-out forwards;
-        }
-
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-      `}</style>
-    </div>
+      </ScrollView>
+    </View>
   );
-};
-
-export default Notifications;
+}
