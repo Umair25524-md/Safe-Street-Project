@@ -197,13 +197,32 @@ async def update_report_status(report_id: str, new_status: str = Form(...)):
         raise HTTPException(status_code=500, detail=str(e))
 
 # ✅ Endpoint: Delete report
+# ✅ Endpoint: Delete report
 @app.delete("/reports/{report_id}")
 async def delete_report(report_id: str):
-    result = collection.delete_one({"_id": ObjectId(report_id)})
-    if result.deleted_count == 1:
-        return {"message": "Report deleted successfully"}
-    else:
-        raise HTTPException(status_code=404, detail="Report not found")
+    try:
+        # First, fetch the report before deleting
+        report = collection.find_one({"_id": ObjectId(report_id)})
+        if not report:
+            raise HTTPException(status_code=404, detail="Report not found")
+
+        # Delete the report
+        result = collection.delete_one({"_id": ObjectId(report_id)})
+        if result.deleted_count == 1:
+            # Add rejection notification
+            user_notifications_collection.insert_one({
+                "email": report["email"],
+                "report_id": report_id,
+                "status": "rejected",
+                "message": f"Your report for '{report['damage_type']}' at '{report['address']}' has been rejected.",
+                "is_read": False,
+                "created_at": datetime.utcnow()
+            })
+            return {"message": "Report deleted successfully"}
+        else:
+            raise HTTPException(status_code=500, detail="Failed to delete the report")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
     
 @app.patch("/reports/{report_id}")
 async def patch_report(report_id: str, update_data: dict = Body(...)):

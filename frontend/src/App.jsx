@@ -9,21 +9,23 @@ import Signup from "./components/Signup";
 import AboutPage from "./components/About";
 import ContactPage from "./components/Contact";
 import Analysis from "./components/Analysis";
-import Notifications from "./components/Notification";
+import UserNotification from "./components/UserNotification";
 import Report from "./components/Report";
 import Advanced from "./components/Advanced";
 import VerifyEmail from "./components/verifyEmail";
 import ProtectedRoute from "./components/ProtectedRoute";
-import History from "./components/History"; // ✅ Newly added
+import History from "./components/History";
+import Notifications from "./components/Notification";
+
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Fetch authentication status on app load
+  // Check authentication status on load
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/isAuthenticated', {
+        const response = await axios.get("http://localhost:5000/isAuthenticated", {
           withCredentials: true
         });
         setIsAuthenticated(response.data.isAuthenticated);
@@ -34,7 +36,7 @@ function App() {
     checkAuth();
   }, []);
 
-  return (  
+  return (
     <Router>
       <NavbarWrapper isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />
       <Routes>
@@ -56,10 +58,18 @@ function App() {
           }
         />
         <Route
-          path="/notifications"
+            path="/notifications"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <Notifications />
+              </ProtectedRoute>
+            }
+          />
+        <Route
+          path="/user-notifications"
           element={
             <ProtectedRoute isAuthenticated={isAuthenticated}>
-              <Notifications />
+              <UserNotification />
             </ProtectedRoute>
           }
         />
@@ -84,14 +94,30 @@ function App() {
   );
 }
 
-// Helper to hide navbar on certain routes
+// Wrapper to conditionally render Navbar
 const NavbarWrapper = ({ isAuthenticated, setIsAuthenticated }) => {
   const location = useLocation();
-  const hideNavbarRoutes = ['/login', '/signup', '/verify-email'];
+  const hideNavbarRoutes = ["/login", "/signup", "/verify-email"];
+
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const email = localStorage.getItem("email");
+    if (email === "safestreet456@gmail.com") {
+      setIsAdmin(true);
+    } else {
+      setIsAdmin(false);
+    }
+  }, [isAuthenticated]);
 
   return (
-    !hideNavbarRoutes.includes(location.pathname) &&
-    <Navbar isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />
+    !hideNavbarRoutes.includes(location.pathname) && (
+      <Navbar
+        isAuthenticated={isAuthenticated}
+        setIsAuthenticated={setIsAuthenticated}
+        isAdmin={isAdmin}
+      />
+    )
   );
 };
 
