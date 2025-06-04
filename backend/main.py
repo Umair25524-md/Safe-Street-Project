@@ -94,7 +94,9 @@ async def report_damage(
     address: str = Form(...),
     comments: str = Form(""),
     email: str = Form(...),
-    submission_date: str = Form(...)
+    submission_date: str = Form(...),
+    latitude: float = Form(...),     # ⬅️ New
+    longitude: float = Form(...)     # ⬅️ New
 ):
     try:
         image_data = await image.read()
@@ -135,6 +137,8 @@ async def report_damage(
         "comments": comments,
         "email": email,
         "submission_date": submission_date,
+        "latitude": latitude,           # ⬅️ New field
+        "longitude": longitude,         # ⬅️ New field
         "status": "pending",
         "image_base64": base64_image,
         "image_type": image.content_type,
@@ -156,7 +160,6 @@ async def report_damage(
         "created_at": datetime.utcnow()
     })
 
-
     return {
         "message": "✅ Report received successfully!",
         "report_id": str(result.inserted_id),
@@ -165,6 +168,7 @@ async def report_damage(
         "summary": summary,
         "status": "pending"
     }
+
 
 # Endpoint: Get all reports (Admin)
 @app.get("/reports/")

@@ -22,7 +22,7 @@ const Login = ({setIsAuthenticated}) => {
     const notify = (message, type) => {
         toast(message, {
             type: type,
-            position: "top-center",
+            position: "top-right",
             autoClose: 2000,
             hideProgressBar: false,
             closeOnClick: true,

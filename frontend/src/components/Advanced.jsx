@@ -4,14 +4,17 @@ import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ClipLoader from 'react-spinners/ClipLoader'; // Add this import
 
 const Advanced = () => {
   const navigate = useNavigate();
   const reportsRef = useRef([]);
   const [reports, setReports] = useState([]);
   const [sortType, setSortType] = useState("newest");
+  const [loading, setLoading] = useState(true); // Loading state
 
   const fetchReports = async () => {
+    setLoading(true);
     try {
       const response = await fetch("http://localhost:8000/reports");
       if (!response.ok) {
@@ -21,6 +24,9 @@ const Advanced = () => {
       setReports(data.reports);
     } catch (error) {
       console.error("Error fetching reports:", error);
+      toast.error("Failed to fetch reports");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -103,6 +109,10 @@ const Advanced = () => {
 
   const renderReportCard = (report, index) => {
     const reportStatus = (report.status ?? "pending").toLowerCase();
+
+    // Construct Google Maps URL for the coordinates
+    const mapsUrl = `https://www.google.com/maps?q=${report.latitude},${report.longitude}`;
+
     return (
       <div
         key={report._id}
@@ -149,8 +159,16 @@ const Advanced = () => {
           </span>
         </p>
 
+        <button
+          onClick={() => window.open(mapsUrl, '_blank')}
+          className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg shadow-md flex items-center justify-center gap-2 transition-colors duration-200"
+        >
+          <i className="ri-map-pin-line text-xl"></i> {/* Remix Icon */}
+          Navigate
+        </button>
+
         {reportStatus === "pending" && (
-          <div className="mt-6 flex flex-col gap-4">
+          <div className="mt-4 flex flex-col gap-4">
             <button
               onClick={() => handleResolved(report._id)}
               className="bg-green-600 px-6 py-3 rounded-lg shadow-md font-semibold text-white focus:outline-none cursor-pointer"
@@ -214,13 +232,21 @@ const Advanced = () => {
         <h2 className="text-2xl font-semibold mb-4 text-amber-400 underline text-center">
           Pending Reports
         </h2>
-        <div className="flex flex-wrap justify-center gap-6">
-          {pendingReports.length > 0 ? (
-            pendingReports.map((report, idx) => renderReportCard(report, idx))
-          ) : (
-            <p className="text-gray-400 italic">No pending reports.</p>
-          )}
-        </div>
+
+        {loading ? (
+          <div className="flex flex-col items-center gap-4 text-gray-300">
+            <p>Fetching reports...</p>
+            <ClipLoader color="#fbbf24" size={50} />
+          </div>
+        ) : (
+          <div className="flex flex-wrap justify-center gap-6">
+            {pendingReports.length > 0 ? (
+              pendingReports.map((report, idx) => renderReportCard(report, idx))
+            ) : (
+              <p className="text-gray-400 italic">No pending reports.</p>
+            )}
+          </div>
+        )}
       </section>
 
       {/* Resolved Reports Section */}
@@ -228,13 +254,21 @@ const Advanced = () => {
         <h2 className="text-2xl font-semibold mb-4 text-green-400 underline text-center">
           Resolved Reports
         </h2>
-        <div className="flex flex-wrap justify-center gap-6">
-          {resolvedReports.length > 0 ? (
-            resolvedReports.map((report, idx) => renderReportCard(report, idx))
-          ) : (
-            <p className="text-gray-400 italic">No resolved reports.</p>
-          )}
-        </div>
+
+        {loading ? (
+          <div className="flex flex-col items-center gap-4 text-gray-300">
+            <p>Fetching reports...</p>
+            <ClipLoader color="#a3e635" size={50} />
+          </div>
+        ) : (
+          <div className="flex flex-wrap justify-center gap-6">
+            {resolvedReports.length > 0 ? (
+              resolvedReports.map((report, idx) => renderReportCard(report, idx))
+            ) : (
+              <p className="text-gray-400 italic">No resolved reports.</p>
+            )}
+          </div>
+        )}
       </section>
 
       <ToastContainer />
