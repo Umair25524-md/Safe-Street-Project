@@ -1,0 +1,211 @@
+
+
+-------------------- POM.XML STRUCTURE --------------------
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.example</groupId>
+  <artifactId>demoapp</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>jar/war</packaging>
+
+  <properties>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
+
+  <dependencies>
+    <!-- Example dependency -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.13.2</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.13.0</version>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+
+
+-------------------- MAVEN COMMANDS --------------------
+mvn clean
+mvn test
+mvn install
+mvn build
+
+-------------------- GIT COMMANDS --------------------
+git init                        -> Initialize repo
+git config --global user.name   -> Set global username
+git config --global user.email  -> Set global email
+git add .                       -> Stage all changes
+git commit -m "msg"             -> Commit changes
+git status                      -> Check repo status
+git log                         -> Show commit history
+git branch                      -> List branches
+git checkout -b newbranch       -> Create & switch branch
+git checkout branch             -> Switch branch
+git merge branch                -> Merge branch into current
+git branch -M main              -> Rename branch to main
+git remote add origin URL       -> Add remote repository
+git push -u origin main         -> Push to remote repo
+git pull                        -> Fetch & merge from remote
+git clone URL                   -> Clone repo
+git remote set-url origin <link> //eror ochnappd u have to do this and aa push di access error ocheste credential manager open chesi remove existing
+ git
+ -------------------- GIT COMMANDS (ALL IMPORTANT) --------------------
+# Setup & Config
+git init                        -> Initialize repo
+git config --global user.name   -> Set global username
+git config --global user.email  -> Set global email
+git config --list               -> Show git config
+
+# Staging & Committing
+git add .                       -> Stage all changes
+git add filename                -> Stage specific file
+git reset filename              -> Unstage a file
+git commit -m "msg"             -> Commit changes
+git commit --amend              -> Edit last commit
+
+# Repo Status & Logs
+git status                      -> Check repo status
+git log                         -> Show commit history
+git log --oneline               -> Compact commit history
+git diff                        -> Show unstaged changes
+git diff --staged               -> Show staged changes
+
+# Branching & Merging
+git branch                      -> List branches
+git branch newbranch            -> Create new branch
+git checkout branch             -> Switch branch
+git checkout -b newbranch       -> Create & switch branch
+git merge branch                -> Merge branch into current
+git branch -d branch            -> Delete branch (safe)
+git branch -D branch            -> Force delete branch
+
+# Remote Repositories
+git remote -v                   -> Show remotes
+git remote add origin URL       -> Add remote repository
+git remote remove origin        -> Remove remote
+git push -u origin main         -> Push to remote repo
+git pull                        -> Fetch & merge from remote
+git fetch                       -> Download remote branches
+git clone URL                   -> Clone repo
+
+# Undo & Revert
+git reset --soft HEAD~1         -> Undo commit, keep changes staged
+git reset --mixed HEAD~1        -> Undo commit, keep changes unstaged
+git reset --hard HEAD~1         -> Undo commit, discard changes
+git revert <commit>             -> Revert a commit safely
+git checkout -- filename        -> Discard changes in file
+
+# Tags
+git tag v1.0                    -> Create lightweight tag
+git tag -a v1.0 -m "msg"        -> Create annotated tag
+git show v1.0                   -> Show tag details
+git push origin v1.0            -> Push tag to remote
+git push --tags                 -> Push all tags
+
+# Stash
+git stash                       -> Save uncommitted changes
+git stash list                  -> Show stash list
+git stash apply stash@{0}       -> Apply stash
+git stash pop                   -> Apply and remove stash
+
+# Other Useful
+git reflog                      -> Show all actions (safe recovery)
+git blame file                  -> Show who changed each line
+git show commit_id              -> Show details of a commit
+git shortlog -sn                -> Show contributors summary
+git cherry-pick commit_id       -> Apply specific commit
+git bisect start                -> Start binary search for bug
+git clean -fd                   -> Remove untracked files/dirs  
+
+-------------------- Q3 — GIT & GITHUB WORKFLOW --------------------
+git init
+git config --global user.name "YourName"
+git config --global user.email "you@example.com"
+git add .
+git commit -m "Initial commit - demoapp"
+
+git checkout -b feature/add-endpoint
+# add TimeController.java file
+git add src/main/java/com/example/demoapp/TimeController.java
+git commit -m "Add /time endpoint"
+
+git checkout master
+git merge feature/add-endpoint
+git branch -M main
+
+git remote add origin https://github.com/<username>/demoapp-lab-practice.git
+git push -u origin main
+
+
+-------------------- Q4 — DOCKER --------------------
+Dockerfile:
+for jar
+FROM eclipse-temurin:17-jdk-alpine
+ARG JAR_FILE=target/*.jar
+COPY ${JAR_FILE} /app.jar
+ENTRYPOINT ["java","-jar","/app.jar"]
+
+for war
+FROM tomcat:9.0
+COPY target/*.war /usr/local/tomcat/webapps/ROOT.war
+EXPOSE 8081
+CMD ["catalina.sh", "run"]
+
+Commands:
+docker build -t demoapp:v1 .       -> Build image
+docker images                      -> List images
+docker run -d -p 8080:8080 --name demoapp demoapp:v1 -> Run container
+docker ps                          -> List running containers
+docker login                       -> Login to DockerHub
+docker tag demoapp:v1 user/demoapp:v1 -> Tag image
+docker push user/demoapp:v1        -> Push to DockerHub
+
+-------------------- Q5 — DOCKER COMPOSE --------------------
+docker-compose.yml:
+version: '3.8'
+services:
+  web:
+    image: <dockerhub-username>/demoapp:v1
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/demo
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: rootpw
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpw
+      MYSQL_DATABASE: demo
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+volumes:
+  db-data:
+
+Commands:
+docker-compose up -d        -> Start services
+docker-compose ps           -> List services
+docker-compose logs web     -> Show logs of web service
+docker-compose down --volumes -> Stop and remove containers + volumes
+
+=========================================================================
+"""
+
+with open("/mnt/data/SE_CheatSheet.txt", "w") as f:
+    f.write(cheat_sheet)
+
+"/mnt/data/SE_CheatSheet.txt"

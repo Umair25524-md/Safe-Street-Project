@@ -78,6 +78,18 @@ const AboutPage = () => {
       email: 'charybros12345@gmail.com',
       contribution: 'Developed the mobile app using React Native, making road reporting accessible on the go.',
     },
+    {
+      name: 'Arnav Agarwal',
+      roll: '23BD1A6602',
+      email: 'ArnavAgarwal@gmail.com',
+      contribution: 'Developed the mobile app using React Native, making road reporting accessible on the go.',
+    },
+    {
+      name: 'Aditya',
+      roll: '23BD1A662F',
+      email: 'charybros12345@gmail.com',
+      contribution: 'Developed the mobile app using React Native, making road reporting accessible on the go.',
+    },
   ];
 
   return (
