@@ -1,0 +1,34 @@
+🔹 Images
+docker build -t myapp .             # Build image from Dockerfile and tag it "myapp"
+docker images                       # List all local images
+docker rmi myapp                    # Remove an image named "myapp"
+docker pull redis                   # Pull an image (e.g., Redis) from Docker Hub
+docker tag myapp myrepo/myapp:v1    # Tag image for pushing to a repository
+docker push myrepo/myapp:v1         # Push image to Docker Hub
+
+🔹 Containers
+docker run --name myc -d myapp       # Run container "myc" in background from image myapp
+docker ps                            # List running containers
+docker ps -a                         # List all containers (running + stopped)
+docker stop myc                      # Stop container named "myc"
+docker start myc                     # Start an existing container "myc"
+docker restart myc                   # Restart a container
+docker rm myc                        # Remove a stopped container
+docker exec -it myc bash             # Open interactive shell inside container "myc"
+docker logs myc                      # View logs of container "myc"
+
+🔹 Volumes & Networks
+docker volume ls                     # List all volumes
+docker volume rm myvol               # Remove volume "myvol"
+docker network ls                    # List all networks
+docker network rm mynet              # Remove network "mynet"
+
+🔹 System
+docker system df                     # Show disk usage by Docker
+docker system prune -a                # Remove all unused containers, networks, images
+
+🐳 Docker Compose
+docker-compose up -d                 # Start all services in background
+docker-compose ps                    # List services in Compose project
+docker-compose logs app              # Show logs for service "app"
+docker-compose down                  # Stop and remove all services
