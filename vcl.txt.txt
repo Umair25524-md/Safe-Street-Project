@@ -1,0 +1,133 @@
+2. Configuration
+
+Before starting, Git needs user information.
+
+git --version → Checks installed Git version.
+
+git config --global user.name "Your Name" → Sets username.
+
+git config --global user.email "your@email.com" → Sets email.
+
+git config --list → Displays all Git configurations.
+
+3. Repository Management
+
+Repositories are the storage locations for your project.
+
+git init → Initializes a new Git repository.
+
+git clone <url> → Creates a local copy of a remote repository.
+
+git remote -v → Views remote repositories linked to local repo.
+
+git remote add origin <url> → Adds a new remote.
+
+git remote remove origin → Removes a remote.
+
+git remote rename origin upstream → Renames a remote.
+
+git remote set-url origin <new_url> → Updates remote URL.
+
+git remote show origin → Shows details of the remote.
+
+git fetch origin → Downloads latest changes without merging.
+
+git pull origin main → Fetches and merges updates from remote.
+
+git push origin main → Uploads local commits to remote.
+
+4. Staging and Committing
+
+Git uses a staging area to prepare changes before committing.
+
+git status → Shows modified, staged, and untracked files.
+
+git add file.txt → Stages a single file.
+
+git add . → Stages all changes.
+
+git commit -m "Message" → Saves staged changes with a message.
+
+git commit --amend -m "Corrected Message" → Edits last commit message.
+
+5. Branching and Merging
+
+Branches allow isolated work on features.
+
+git branch → Lists branches.
+
+git branch new-branch → Creates a branch.
+
+git branch -d branch-name → Deletes a branch.
+
+git checkout branch-name → Switches branches.
+
+git checkout -b new-branch → Creates & switches to a branch.
+
+git merge branch-name → Merges branch into current branch.
+
+git fetch origin branch-name → Fetches a specific branch.
+
+git push --set-upstream origin branch-name → Pushes branch for first time.
+
+git rebase origin/main → Rebases local branch onto updated remote.
+
+git remote prune origin → Removes stale remote branches.
+
+6. Undoing Changes
+
+Sometimes you may need to undo mistakes.
+
+git reset file.txt → Removes file from staging.
+
+git reset --hard → Resets staging and working directory to last commit.
+
+git revert <commit> → Creates a new commit undoing a specific commit.
+
+git restore file.txt → Restores file before staging.
+
+7. Viewing History
+
+History helps track changes and commits.
+
+git log → Shows commit history.
+
+git log --oneline → Concise log.
+
+git diff → Shows unstaged changes.
+
+git show <commit> → Shows details of a specific commit.
+
+git blame file.txt → Shows who changed each line.
+
+8. Gitignore
+
+The .gitignore file specifies which files Git should ignore. Example rules:
+
+*.log → Ignore log files.
+
+temp/ → Ignore directory.
+
+secret.txt → Ignore specific file.
+
+*.bak → Ignore backup files.
+
+9. Stash
+
+Stashing temporarily saves uncommitted work.
+
+git stash → Saves changes and clears working directory.
+
+git stash apply → Reapplies stashed changes.
+
+10. Advanced Operations
+
+Recover deleted branches: git reflog + git checkout -b branch <commit_hash>.
+
+Delete multiple branches: git branch -d branch1 branch2.
+
+Check merged branches: git branch --merged.
+
+Remove sensitive files: git filter-branch --force --index-filter "git rm --cached --ignore-unmatch secrets.txt" --prune-empty --tag-name-filter cat -- --all.
+
+Resolve merge conflicts: Edit conflict markers (<<<<<<<, =======, >>>>>>>), then git add file + git commit.
